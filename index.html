@@ -3,625 +3,418 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💰 Deposit Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>💰 Shamfinance — Deposit Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --pink: #E91E8C;
     --dark-pink: #C2185B;
-    --deep: #880E4F;
-    --bg: #0F0A0D;
-    --surface: #1A1018;
-    --card: #221520;
-    --border: rgba(233,30,140,0.15);
-    --text: #F8F0F5;
-    --muted: #9E7B90;
-    --green: #4CAF50;
-    --yellow: #FFB300;
-    --purple: #CE93D8;
-    --red: #EF5350;
+    --deep: #7B0D3E;
+    --bg: #0C080B;
+    --surface: #160F13;
+    --card: #1E1319;
+    --border: rgba(233,30,140,0.13);
+    --text: #F5ECF1;
+    --muted: #8A6878;
+    --green: #52C97A;
+    --yellow: #F5B731;
+    --purple: #C084FC;
+    --red: #F87171;
   }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
+  * { margin:0; padding:0; box-sizing:border-box; }
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Hind Siliguri', sans-serif;
     min-height: 100vh;
-    overflow-x: hidden;
   }
-
-  /* Animated background */
   body::before {
-    content: '';
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(ellipse at 20% 20%, rgba(233,30,140,0.07) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(194,24,91,0.05) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
+    content:'';
+    position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 15% 10%, rgba(233,30,140,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 85% 90%, rgba(194,24,91,0.05) 0%, transparent 60%);
+    pointer-events:none; z-index:0;
   }
-
-  .wrapper { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 20px 16px 60px; }
+  .wrap { position:relative; z-index:1; max-width:640px; margin:0 auto; padding:24px 16px 80px; }
 
   /* Header */
-  .header {
-    text-align: center;
-    padding: 32px 0 28px;
-  }
-  .header-icon {
-    font-size: 2.4rem;
-    display: block;
-    margin-bottom: 8px;
-    filter: drop-shadow(0 0 20px rgba(233,30,140,0.6));
-    animation: pulse 3s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%,100% { filter: drop-shadow(0 0 20px rgba(233,30,140,0.6)); }
-    50% { filter: drop-shadow(0 0 35px rgba(233,30,140,0.9)); }
-  }
+  .header { text-align:center; padding:28px 0 24px; }
   .header h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #FF6EC7, #E91E8C, #C2185B);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.5px;
+    font-family:'Playfair Display', serif;
+    font-size:2rem; font-weight:900;
+    background: linear-gradient(135deg, #FF6EC7 0%, #E91E8C 50%, #C2185B 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    letter-spacing:-1px; line-height:1.1;
   }
-  .header p {
-    color: var(--muted);
-    font-size: 0.85rem;
-    margin-top: 4px;
+  .header p { color:var(--muted); font-size:0.82rem; margin-top:6px; letter-spacing:0.3px; }
+  .header-dot {
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--green); box-shadow:0 0 10px var(--green);
+    margin-right:6px; animation:breathe 2s ease-in-out infinite;
+  }
+  @keyframes breathe { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+  /* Loading */
+  .loading {
+    display:flex; flex-direction:column; align-items:center;
+    justify-content:center; height:300px; gap:16px;
+  }
+  .spinner {
+    width:40px; height:40px; border-radius:50%;
+    border:3px solid var(--border);
+    border-top-color:var(--pink);
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .loading p { color:var(--muted); font-size:0.85rem; }
+
+  /* Stats */
+  .stats { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:16px; }
+  .stat {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:16px; padding:16px 18px; position:relative; overflow:hidden;
+    transition:transform 0.2s;
+  }
+  .stat::after {
+    content:''; position:absolute; top:0; left:0; right:0; height:1.5px;
+    background:linear-gradient(90deg, transparent, var(--pink), transparent);
+  }
+  .stat:hover { transform:translateY(-2px); }
+  .stat-label { font-size:0.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-family:'DM Mono',monospace; margin-bottom:8px; }
+  .stat-value { font-family:'DM Mono',monospace; font-size:1.55rem; font-weight:500; line-height:1; }
+  .stat-value.pink { color:var(--pink); }
+  .stat-value.green { color:var(--green); }
+  .stat-value.yellow { color:var(--yellow); }
+  .stat-value.purple { color:var(--purple); }
+  .stat-sub { font-size:0.7rem; color:var(--muted); margin-top:4px; }
+
+  /* Progress */
+  .progress-box {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:16px; padding:16px 18px; margin-bottom:20px;
+  }
+  .progress-meta { display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.78rem; color:var(--muted); }
+  .progress-meta strong { font-family:'DM Mono',monospace; color:var(--pink); }
+  .track { background:rgba(255,255,255,0.04); border-radius:100px; height:8px; overflow:hidden; }
+  .fill {
+    height:100%; border-radius:100px;
+    background:linear-gradient(90deg, var(--dark-pink), var(--pink), #FF6EC7);
+    box-shadow:0 0 14px rgba(233,30,140,0.4);
+    transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1);
   }
 
-  /* Stats cards */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
+  /* List */
+  .list-head {
+    font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted);
+    text-transform:uppercase; letter-spacing:1.2px; margin-bottom:10px; padding:0 2px;
   }
-  .stat-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s;
+  .divider {
+    display:flex; align-items:center; gap:10px; margin:14px 0 8px;
   }
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--pink), transparent);
-  }
-  .stat-card:hover { transform: translateY(-2px); }
-  .stat-label {
-    font-size: 0.72rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-family: 'Space Grotesk', sans-serif;
-    margin-bottom: 6px;
-  }
-  .stat-value {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    line-height: 1;
-  }
-  .stat-value.pink { color: var(--pink); }
-  .stat-value.green { color: var(--green); }
-  .stat-value.yellow { color: var(--yellow); }
-  .stat-value.purple { color: var(--purple); }
-  .stat-sub {
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin-top: 3px;
-  }
+  .divider span { font-size:0.65rem; color:var(--muted); font-family:'DM Mono',monospace; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
+  .divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--border); }
 
-  /* Progress bar */
-  .progress-section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px 18px;
-    margin-bottom: 20px;
+  /* Deposit item */
+  .item {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:14px; padding:13px 15px;
+    margin-bottom:7px; display:flex; align-items:center; gap:13px;
+    transition:all 0.22s ease; position:relative; overflow:visible;
   }
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    margin-bottom: 10px;
-    color: var(--muted);
-  }
-  .progress-label span:last-child {
-    font-family: 'Space Grotesk', sans-serif;
-    color: var(--pink);
-    font-weight: 600;
-  }
-  .progress-track {
-    background: rgba(255,255,255,0.05);
-    border-radius: 100px;
-    height: 10px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #E91E8C, #FF6EC7);
-    border-radius: 100px;
-    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 0 12px rgba(233,30,140,0.5);
-  }
+  .item.completed { border-color:rgba(82,201,122,0.18); background:rgba(82,201,122,0.04); }
+  .item.next { border-color:rgba(245,183,49,0.35); background:rgba(245,183,49,0.05); box-shadow:0 0 18px rgba(245,183,49,0.07); }
+  .item.matured { border-color:rgba(192,132,252,0.25); background:rgba(192,132,252,0.04); }
+  .item.skipped { border-color:rgba(248,113,113,0.18); background:rgba(248,113,113,0.03); }
+  .item.clickable:hover { border-color:rgba(233,30,140,0.3); transform:translateX(4px); cursor:pointer; }
 
-  /* Schedule list */
-  .schedule-header {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    padding: 0 4px;
-  }
+  .dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .dot.completed { background:var(--green); box-shadow:0 0 7px rgba(82,201,122,0.7); }
+  .dot.next { background:var(--yellow); box-shadow:0 0 7px rgba(245,183,49,0.7); animation:blink 1.4s ease-in-out infinite; }
+  .dot.upcoming { background:var(--muted); }
+  .dot.matured { background:var(--purple); box-shadow:0 0 7px rgba(192,132,252,0.7); }
+  .dot.skipped { background:var(--red); }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
 
-  .deposit-item {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 16px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    transition: all 0.25s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  .deposit-item.completed {
-    border-color: rgba(76,175,80,0.2);
-    background: rgba(76,175,80,0.04);
-  }
-  .deposit-item.next {
-    border-color: rgba(255,179,0,0.4);
-    background: rgba(255,179,0,0.06);
-    box-shadow: 0 0 20px rgba(255,179,0,0.08);
-  }
-  .deposit-item.matured {
-    border-color: rgba(206,147,216,0.3);
-    background: rgba(206,147,216,0.05);
-  }
-  .deposit-item.upcoming:hover {
-    border-color: rgba(233,30,140,0.3);
-    transform: translateX(3px);
-    cursor: pointer;
-  }
+  .item-info { flex:1; min-width:0; }
+  .item-serial { font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--muted); margin-bottom:2px; }
+  .item-date { font-family:'DM Mono',monospace; font-size:0.92rem; font-weight:500; color:var(--text); }
+  .item-note { font-size:0.7rem; color:var(--muted); margin-top:2px; }
 
-  /* Status dot */
-  .status-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
+  .item-right { display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
+  .item-amt { font-family:'DM Mono',monospace; font-size:0.95rem; font-weight:500; color:var(--text); }
+  .badge {
+    font-size:0.6rem; font-family:'DM Mono',monospace;
+    padding:2px 8px; border-radius:100px; white-space:nowrap;
   }
-  .status-dot.completed { background: var(--green); box-shadow: 0 0 8px rgba(76,175,80,0.6); }
-  .status-dot.next { background: var(--yellow); box-shadow: 0 0 8px rgba(255,179,0,0.6); animation: blink 1.5s ease-in-out infinite; }
-  .status-dot.upcoming { background: var(--muted); }
-  .status-dot.matured { background: var(--purple); box-shadow: 0 0 8px rgba(206,147,216,0.6); }
-  @keyframes blink {
-    0%,100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
+  .badge.completed { background:rgba(82,201,122,0.12); color:#86EFAC; }
+  .badge.next { background:rgba(245,183,49,0.18); color:#FDE68A; }
+  .badge.upcoming { background:rgba(138,104,120,0.15); color:var(--muted); }
+  .badge.matured { background:rgba(192,132,252,0.12); color:#E9D5FF; }
+  .badge.skipped { background:rgba(248,113,113,0.12); color:#FCA5A5; }
 
-  .item-info { flex: 1; }
-  .item-serial {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.65rem;
-    color: var(--muted);
-    margin-bottom: 1px;
+  /* Popup */
+  .popup {
+    display:none; position:absolute; right:0; top:calc(100% + 6px);
+    background:#241828; border:1px solid rgba(233,30,140,0.25);
+    border-radius:14px; overflow:hidden; z-index:50;
+    box-shadow:0 12px 40px rgba(0,0,0,0.6); min-width:180px;
+    animation:popIn 0.18s cubic-bezier(0.34,1.56,0.64,1);
   }
-  .item-date {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text);
+  @keyframes popIn { from{opacity:0;transform:scale(0.88) translateY(-6px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .item.open .popup { display:block; }
+  .popup-title { font-size:0.62rem; font-family:'DM Mono',monospace; color:var(--muted); padding:10px 12px 6px; text-transform:uppercase; letter-spacing:0.8px; border-bottom:1px solid rgba(255,255,255,0.05); }
+  .pbtn {
+    display:flex; align-items:center; gap:9px;
+    padding:10px 14px; font-size:0.82rem;
+    font-family:'Hind Siliguri',sans-serif;
+    background:none; border:none; color:var(--text);
+    width:100%; text-align:left; cursor:pointer;
+    transition:background 0.15s;
   }
-  .item-note {
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin-top: 2px;
-  }
-  .item-amount {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-right: 6px;
-  }
-  .item-status-badge {
-    font-size: 0.65rem;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 100px;
-    letter-spacing: 0.3px;
-  }
-  .badge-completed { background: rgba(76,175,80,0.15); color: #81C784; }
-  .badge-next { background: rgba(255,179,0,0.2); color: #FFD54F; }
-  .badge-upcoming { background: rgba(158,123,144,0.15); color: var(--muted); }
-  .badge-matured { background: rgba(206,147,216,0.15); color: var(--purple); }
-
-  /* Dropdown popup */
-  .action-popup {
-    display: none;
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #2A1D27;
-    border: 1px solid rgba(233,30,140,0.3);
-    border-radius: 12px;
-    overflow: hidden;
-    z-index: 10;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    min-width: 170px;
-    animation: popIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  @keyframes popIn {
-    from { opacity: 0; transform: translateY(-50%) scale(0.85); }
-    to   { opacity: 1; transform: translateY(-50%) scale(1); }
-  }
-  .deposit-item.show-popup .action-popup { display: block; }
-  .deposit-item.show-popup .item-status-badge { visibility: hidden; }
-
-  .popup-title {
-    font-size: 0.68rem;
-    color: var(--muted);
-    padding: 10px 12px 6px;
-    font-family: 'Space Grotesk', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .popup-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    font-size: 0.82rem;
-    font-family: 'Hind Siliguri', sans-serif;
-    cursor: pointer;
-    transition: background 0.15s;
-    border: none;
-    background: none;
-    color: var(--text);
-    width: 100%;
-    text-align: left;
-  }
-  .popup-btn:hover { background: rgba(233,30,140,0.12); }
-  .popup-btn .btn-icon { font-size: 1rem; }
-  .popup-btn.confirm { color: #81C784; }
-  .popup-btn.skip { color: #FFB74D; }
-  .popup-btn.cancel-btn { color: var(--muted); border-top: 1px solid rgba(255,255,255,0.06); }
+  .pbtn:hover { background:rgba(233,30,140,0.1); }
+  .pbtn.pay { color:#86EFAC; }
+  .pbtn.skip { color:#FDE68A; }
+  .pbtn.undo { color:#C4B5FD; }
+  .pbtn.cancel { color:var(--muted); border-top:1px solid rgba(255,255,255,0.05); }
 
   /* Toast */
   .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: #2A1D27;
-    border: 1px solid rgba(233,30,140,0.4);
-    border-radius: 100px;
-    padding: 12px 22px;
-    font-size: 0.85rem;
-    font-family: 'Space Grotesk', sans-serif;
-    color: var(--text);
-    z-index: 100;
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    white-space: nowrap;
+    position:fixed; bottom:28px; left:50%;
+    transform:translateX(-50%) translateY(80px);
+    background:#241828; border:1px solid rgba(233,30,140,0.3);
+    border-radius:100px; padding:11px 22px;
+    font-size:0.82rem; font-family:'DM Mono',monospace;
+    color:var(--text); z-index:100;
+    transition:transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow:0 8px 30px rgba(0,0,0,0.4); white-space:nowrap;
   }
-  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
 
-  /* Confetti shimmer on matured */
-  @keyframes shimmer {
-    0%,100% { opacity: 1; }
-    50% { opacity: 0.7; }
-  }
-  .deposit-item.matured { animation: shimmer 2s ease-in-out infinite; }
-
-  /* Section divider */
-  .section-divider {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 16px 0 10px;
-  }
-  .section-divider span {
-    font-size: 0.7rem;
-    color: var(--muted);
-    font-family: 'Space Grotesk', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    white-space: nowrap;
-  }
-  .section-divider::before, .section-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  .hint-text {
-    text-align: center;
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin: 10px 0 16px;
-    opacity: 0.7;
-  }
+  .hint { text-align:center; font-size:0.7rem; color:var(--muted); margin:8px 0 18px; opacity:0.7; }
 </style>
 </head>
 <body>
-<div class="wrapper">
-
+<div class="wrap">
   <div class="header">
-    <span class="header-icon">💰</span>
-    <h1>Savings Deposit Tracker</h1>
-    <p>প্রতি শুক্রবার ৳২৫০ — মেয়াদ ৬ মাস</p>
+    <h1>Shamfinance<br>Deposit Tracker</h1>
+    <p><span class="header-dot"></span>প্রতি শুক্রবার ৳২৫০ · মেয়াদ ৬ মাস</p>
   </div>
 
-  <!-- Stats -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-label">মোট জমা</div>
-      <div class="stat-value pink" id="stat-deposited">৳0</div>
-      <div class="stat-sub" id="stat-deposited-count">0 কিস্তি সম্পন্ন</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">বাকি জমা</div>
-      <div class="stat-value yellow" id="stat-remaining">৳0</div>
-      <div class="stat-sub" id="stat-remaining-count">0 কিস্তি বাকি</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">পরের কিস্তি</div>
-      <div class="stat-value green" id="stat-next" style="font-size:1rem; padding-top:4px">—</div>
-      <div class="stat-sub">Next Deposit</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">মোট পরিকল্পনা</div>
-      <div class="stat-value purple">৳6,750</div>
-      <div class="stat-sub">27 × ৳250</div>
+  <div id="app">
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>ডেটা লোড হচ্ছে...</p>
     </div>
   </div>
-
-  <!-- Progress -->
-  <div class="progress-section">
-    <div class="progress-label">
-      <span>অগ্রগতি</span>
-      <span id="progress-pct">0%</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progress-bar" style="width:0%"></div>
-    </div>
-  </div>
-
-  <p class="hint-text">💡 Upcoming কিস্তিতে ট্যাপ করে পেমেন্ট আপডেট করুন</p>
-
-  <!-- Schedule list -->
-  <div class="schedule-header">সম্পূর্ণ কিস্তি তালিকা</div>
-  <div id="schedule-list"></div>
-
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-const AMOUNT = 250;
+const AMT = 250;
+const STORAGE_KEY = 'shamfinance_deposits_v2';
 
-// All deposits from screenshots
-const depositsData = [
-  { id:1,  date:"10 Apr 2026", status:"completed", note:"Deposit Completed on 10 Apr 26" },
-  { id:2,  date:"17 Apr 2026", status:"completed", note:"Deposit Completed on 17 Apr 26" },
-  { id:3,  date:"24 Apr 2026", status:"completed", note:"Deposit Completed on 24 Apr 26" },
-  { id:4,  date:"01 May 2026", status:"completed", note:"Deposit Completed on 03 May 26" },
-  { id:5,  date:"08 May 2026", status:"next",      note:"Next Deposit Due" },
-  { id:6,  date:"15 May 2026", status:"upcoming",  note:"" },
-  { id:7,  date:"22 May 2026", status:"upcoming",  note:"" },
-  { id:8,  date:"29 May 2026", status:"upcoming",  note:"" },
-  { id:9,  date:"05 Jun 2026", status:"upcoming",  note:"" },
-  { id:10, date:"12 Jun 2026", status:"upcoming",  note:"" },
-  { id:11, date:"19 Jun 2026", status:"upcoming",  note:"" },
-  { id:12, date:"26 Jun 2026", status:"upcoming",  note:"" },
-  { id:13, date:"03 Jul 2026", status:"upcoming",  note:"" },
-  { id:14, date:"10 Jul 2026", status:"upcoming",  note:"" },
-  { id:15, date:"17 Jul 2026", status:"upcoming",  note:"" },
-  { id:16, date:"24 Jul 2026", status:"upcoming",  note:"" },
-  { id:17, date:"31 Jul 2026", status:"upcoming",  note:"" },
-  { id:18, date:"07 Aug 2026", status:"upcoming",  note:"" },
-  { id:19, date:"14 Aug 2026", status:"upcoming",  note:"" },
-  { id:20, date:"21 Aug 2026", status:"upcoming",  note:"" },
-  { id:21, date:"28 Aug 2026", status:"upcoming",  note:"" },
-  { id:22, date:"04 Sep 2026", status:"upcoming",  note:"" },
-  { id:23, date:"11 Sep 2026", status:"upcoming",  note:"" },
-  { id:24, date:"18 Sep 2026", status:"upcoming",  note:"" },
-  { id:25, date:"25 Sep 2026", status:"upcoming",  note:"" },
-  { id:26, date:"02 Oct 2026", status:"upcoming",  note:"" },
-  { id:27, date:"09 Oct 2026", status:"matured",   note:"Ready For Disbursement 🎉" },
+const DEFAULT_DEPOSITS = [
+  {id:1,  date:"10 Apr 2026", status:"completed", note:"Deposit Completed on 10 Apr 26"},
+  {id:2,  date:"17 Apr 2026", status:"completed", note:"Deposit Completed on 17 Apr 26"},
+  {id:3,  date:"24 Apr 2026", status:"completed", note:"Deposit Completed on 24 Apr 26"},
+  {id:4,  date:"01 May 2026", status:"completed", note:"Deposit Completed on 03 May 26"},
+  {id:5,  date:"08 May 2026", status:"next",      note:"Next Deposit Due"},
+  {id:6,  date:"15 May 2026", status:"upcoming",  note:""},
+  {id:7,  date:"22 May 2026", status:"upcoming",  note:""},
+  {id:8,  date:"29 May 2026", status:"upcoming",  note:""},
+  {id:9,  date:"05 Jun 2026", status:"upcoming",  note:""},
+  {id:10, date:"12 Jun 2026", status:"upcoming",  note:""},
+  {id:11, date:"19 Jun 2026", status:"upcoming",  note:""},
+  {id:12, date:"26 Jun 2026", status:"upcoming",  note:""},
+  {id:13, date:"03 Jul 2026", status:"upcoming",  note:""},
+  {id:14, date:"10 Jul 2026", status:"upcoming",  note:""},
+  {id:15, date:"17 Jul 2026", status:"upcoming",  note:""},
+  {id:16, date:"24 Jul 2026", status:"upcoming",  note:""},
+  {id:17, date:"31 Jul 2026", status:"upcoming",  note:""},
+  {id:18, date:"07 Aug 2026", status:"upcoming",  note:""},
+  {id:19, date:"14 Aug 2026", status:"upcoming",  note:""},
+  {id:20, date:"21 Aug 2026", status:"upcoming",  note:""},
+  {id:21, date:"28 Aug 2026", status:"upcoming",  note:""},
+  {id:22, date:"04 Sep 2026", status:"upcoming",  note:""},
+  {id:23, date:"11 Sep 2026", status:"upcoming",  note:""},
+  {id:24, date:"18 Sep 2026", status:"upcoming",  note:""},
+  {id:25, date:"25 Sep 2026", status:"upcoming",  note:""},
+  {id:26, date:"02 Oct 2026", status:"upcoming",  note:""},
+  {id:27, date:"09 Oct 2026", status:"matured",   note:"Ready For Disbursement 🎉"},
 ];
 
-// Load saved state from localStorage
-function loadState() {
-  try {
-    const saved = localStorage.getItem('depositTrackerState');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      parsed.forEach(s => {
-        const dep = depositsData.find(d => d.id === s.id);
-        if (dep) { dep.status = s.status; dep.note = s.note; }
-      });
-    }
-  } catch(e) {}
-}
+let deposits = [];
 
-function saveState() {
-  const state = depositsData.map(d => ({ id: d.id, status: d.status, note: d.note }));
-  try { localStorage.setItem('depositTrackerState', JSON.stringify(state)); } catch(e) {}
-}
-
-const badgeMap = {
-  completed: '<span class="item-status-badge badge-completed">✓ সম্পন্ন</span>',
-  next:      '<span class="item-status-badge badge-next">⏰ পরবর্তী</span>',
-  upcoming:  '<span class="item-status-badge badge-upcoming">⏳ আসন্ন</span>',
-  matured:   '<span class="item-status-badge badge-matured">🎉 Matured</span>',
-  skipped:   '<span class="item-status-badge" style="background:rgba(239,83,80,0.15);color:#EF9A9A;">⚠ স্কিপ</span>',
-};
-
-function renderItem(dep) {
-  const isClickable = dep.status === 'upcoming' || dep.status === 'next' || dep.status === 'skipped';
-  const el = document.createElement('div');
-  el.className = `deposit-item ${dep.status}`;
-  el.dataset.id = dep.id;
-
-  el.innerHTML = `
-    <div class="status-dot ${dep.status}"></div>
-    <div class="item-info">
-      <div class="item-serial">কিস্তি #${dep.id}</div>
-      <div class="item-date">${dep.date}</div>
-      ${dep.note ? `<div class="item-note">${dep.note}</div>` : ''}
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div class="item-amount">৳${AMOUNT}</div>
-      ${badgeMap[dep.status] || badgeMap.upcoming}
-    </div>
-    ${isClickable ? `
-    <div class="action-popup">
-      <div class="popup-title">অ্যাকশন বেছে নিন</div>
-      <button class="popup-btn confirm" onclick="markPaid(${dep.id}, event)">
-        <span class="btn-icon">✅</span> পেমেন্ট সম্পন্ন
-      </button>
-      <button class="popup-btn skip" onclick="markSkipped(${dep.id}, event)">
-        <span class="btn-icon">⚠️</span> এই বার স্কিপ
-      </button>
-      <button class="popup-btn cancel-btn" onclick="closePopup(event)">
-        <span class="btn-icon">✕</span> বাতিল
-      </button>
-    </div>` : ''}
-  `;
-
-  if (isClickable) {
-    el.addEventListener('click', (e) => {
-      if (e.target.closest('.popup-btn')) return;
-      const wasOpen = el.classList.contains('show-popup');
-      closeAllPopups();
-      if (!wasOpen) el.classList.add('show-popup');
-    });
+// ── Storage: try window.storage first, fallback to localStorage ──
+async function loadData() {
+  // Try window.storage (artifact persistent storage)
+  if (window.storage) {
+    try {
+      const res = await window.storage.get(STORAGE_KEY);
+      if (res && res.value) {
+        deposits = JSON.parse(res.value);
+        return;
+      }
+    } catch(e) {}
   }
-
-  return el;
+  // Fallback: localStorage
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) { deposits = JSON.parse(saved); return; }
+  } catch(e) {}
+  // Default
+  deposits = JSON.parse(JSON.stringify(DEFAULT_DEPOSITS));
 }
 
-function closeAllPopups() {
-  document.querySelectorAll('.deposit-item.show-popup').forEach(el => el.classList.remove('show-popup'));
+async function saveData() {
+  const json = JSON.stringify(deposits);
+  // Try window.storage
+  if (window.storage) {
+    try { await window.storage.set(STORAGE_KEY, json); } catch(e) {}
+  }
+  // Always also save to localStorage as backup
+  try { localStorage.setItem(STORAGE_KEY, json); } catch(e) {}
 }
 
-function closePopup(e) {
-  e.stopPropagation();
-  closeAllPopups();
+function promoteNext() {
+  deposits.forEach(d => { if (d.status === 'next') d.status = 'upcoming'; });
+  const n = deposits.find(d => d.status === 'upcoming');
+  if (n) { n.status = 'next'; n.note = 'Next Deposit Due'; }
 }
 
-function markPaid(id, e) {
-  e.stopPropagation();
-  const dep = depositsData.find(d => d.id === id);
-  if (!dep) return;
-  dep.status = 'completed';
-  dep.note = `Deposit Completed ✓`;
-
-  // If this was "next", find next upcoming and make it "next"
-  promoteNextDeposit();
-  saveState();
-  rerender();
-  showToast(`✅ ${dep.date} — পেমেন্ট সম্পন্ন হয়েছে!`);
+function closeAll() {
+  document.querySelectorAll('.item.open').forEach(el => el.classList.remove('open'));
 }
 
-function markSkipped(id, e) {
-  e.stopPropagation();
-  const dep = depositsData.find(d => d.id === id);
-  if (!dep) return;
-  dep.status = 'skipped';
-  dep.note = 'এই কিস্তি স্কিপ করা হয়েছে';
-  promoteNextDeposit();
-  saveState();
-  rerender();
-  showToast(`⚠️ ${dep.date} — স্কিপ করা হয়েছে`);
-}
-
-function promoteNextDeposit() {
-  // Remove existing "next" markers (that aren't already completed/skipped)
-  depositsData.forEach(d => { if (d.status === 'next') d.status = 'upcoming'; });
-  // Find first upcoming and make it next
-  const nextUp = depositsData.find(d => d.status === 'upcoming');
-  if (nextUp) { nextUp.status = 'next'; nextUp.note = 'Next Deposit Due'; }
-}
-
-function updateStats() {
-  const completed = depositsData.filter(d => d.status === 'completed').length;
-  const skipped   = depositsData.filter(d => d.status === 'skipped').length;
-  const pending   = depositsData.filter(d => d.status === 'upcoming' || d.status === 'next').length;
-  const total     = depositsData.length;
-  const deposited = completed * AMOUNT;
-  const remaining = pending * AMOUNT;
+function render() {
+  const app = document.getElementById('app');
+  const completed = deposits.filter(d => d.status === 'completed').length;
+  const skipped   = deposits.filter(d => d.status === 'skipped').length;
+  const pending   = deposits.filter(d => d.status === 'upcoming' || d.status === 'next').length;
+  const total     = deposits.length;
   const pct       = Math.round((completed / total) * 100);
+  const nextDep   = deposits.find(d => d.status === 'next');
 
-  document.getElementById('stat-deposited').textContent = `৳${deposited.toLocaleString()}`;
-  document.getElementById('stat-deposited-count').textContent = `${completed} কিস্তি সম্পন্ন`;
-  document.getElementById('stat-remaining').textContent = `৳${remaining.toLocaleString()}`;
-  document.getElementById('stat-remaining-count').textContent = `${pending} কিস্তি বাকি`;
-  document.getElementById('progress-pct').textContent = `${pct}%`;
-  document.getElementById('progress-bar').style.width = `${pct}%`;
+  let html = `
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">মোট জমা</div>
+      <div class="stat-value pink">৳${(completed*AMT).toLocaleString()}</div>
+      <div class="stat-sub">${completed} কিস্তি সম্পন্ন</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">বাকি জমা</div>
+      <div class="stat-value yellow">৳${(pending*AMT).toLocaleString()}</div>
+      <div class="stat-sub">${pending} কিস্তি বাকি</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">পরের কিস্তি</div>
+      <div class="stat-value green" style="font-size:0.95rem;padding-top:5px">${nextDep ? nextDep.date : '🎉 শেষ'}</div>
+      <div class="stat-sub">Next Deposit</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">মোট পরিকল্পনা</div>
+      <div class="stat-value purple">৳${(total*AMT).toLocaleString()}</div>
+      <div class="stat-sub">${total} × ৳${AMT}</div>
+    </div>
+  </div>
 
-  const nextDep = depositsData.find(d => d.status === 'next');
-  document.getElementById('stat-next').textContent = nextDep ? nextDep.date : '🎉 সম্পন্ন';
-}
+  <div class="progress-box">
+    <div class="progress-meta">
+      <span>অগ্রগতি — ${completed}/${total} কিস্তি</span>
+      <strong>${pct}%</strong>
+    </div>
+    <div class="track"><div class="fill" style="width:${pct}%"></div></div>
+  </div>
 
-function rerender() {
-  const list = document.getElementById('schedule-list');
-  list.innerHTML = '';
-  closeAllPopups();
+  <p class="hint">💡 Upcoming বা Next কিস্তিতে ট্যাপ করুন</p>
+  <div class="list-head">সম্পূর্ণ কিস্তি তালিকা</div>`;
 
-  let lastSection = null;
-  depositsData.forEach(dep => {
-    const section = dep.status === 'completed' || dep.status === 'skipped'
-      ? 'done' : 'pending';
-    if (section !== lastSection) {
-      const div = document.createElement('div');
-      div.className = 'section-divider';
-      div.innerHTML = `<span>${section === 'done' ? '✅ সম্পন্ন' : '⏳ আসন্ন / বাকি'}</span>`;
-      list.appendChild(div);
-      lastSection = section;
+  let lastGroup = null;
+  deposits.forEach(dep => {
+    const grp = (dep.status === 'completed' || dep.status === 'skipped') ? 'done' : 'pending';
+    if (grp !== lastGroup) {
+      html += `<div class="divider"><span>${grp==='done' ? '✅ সম্পন্ন' : '⏳ আসন্ন'}</span></div>`;
+      lastGroup = grp;
     }
-    list.appendChild(renderItem(dep));
+    const clickable = dep.status === 'upcoming' || dep.status === 'next' || dep.status === 'skipped';
+    const badgeLabel = {completed:'✓ সম্পন্ন', next:'⏰ পরবর্তী', upcoming:'⏳ আসন্ন', matured:'🎉 Matured', skipped:'⚠ স্কিপ'}[dep.status] || '';
+
+    html += `
+    <div class="item ${dep.status} ${clickable?'clickable':''}" data-id="${dep.id}">
+      <div class="dot ${dep.status}"></div>
+      <div class="item-info">
+        <div class="item-serial">#${dep.id}</div>
+        <div class="item-date">${dep.date}</div>
+        ${dep.note ? `<div class="item-note">${dep.note}</div>` : ''}
+      </div>
+      <div class="item-right">
+        <div class="item-amt">৳${AMT}</div>
+        <div class="badge ${dep.status}">${badgeLabel}</div>
+      </div>
+      ${clickable ? `
+      <div class="popup">
+        <div class="popup-title">অ্যাকশন</div>
+        ${dep.status !== 'skipped' ? `<button class="pbtn pay" data-action="pay" data-id="${dep.id}">✅ পেমেন্ট সম্পন্ন</button>` : ''}
+        ${dep.status !== 'skipped' ? `<button class="pbtn skip" data-action="skip" data-id="${dep.id}">⚠️ স্কিপ করুন</button>` : ''}
+        ${dep.status === 'skipped' ? `<button class="pbtn undo" data-action="undo" data-id="${dep.id}">↩️ পূর্বাবস্থায় ফিরুন</button>` : ''}
+        <button class="pbtn cancel" data-action="close">✕ বাতিল</button>
+      </div>` : ''}
+    </div>`;
   });
 
-  updateStats();
+  app.innerHTML = html;
+
+  // Bind events
+  app.querySelectorAll('.item.clickable').forEach(el => {
+    el.addEventListener('click', e => {
+      if (e.target.closest('.pbtn')) return;
+      const wasOpen = el.classList.contains('open');
+      closeAll();
+      if (!wasOpen) el.classList.add('open');
+      e.stopPropagation();
+    });
+  });
+
+  app.querySelectorAll('.pbtn').forEach(btn => {
+    btn.addEventListener('click', async e => {
+      e.stopPropagation();
+      const action = btn.dataset.action;
+      const id = parseInt(btn.dataset.id);
+      if (action === 'close') { closeAll(); return; }
+      const dep = deposits.find(d => d.id === id);
+      if (!dep) return;
+      if (action === 'pay') {
+        dep.status = 'completed';
+        dep.note = `Deposit Completed ✓`;
+        promoteNext();
+        await saveData();
+        render();
+        toast(`✅ ${dep.date} — পেমেন্ট সম্পন্ন!`);
+      } else if (action === 'skip') {
+        dep.status = 'skipped';
+        dep.note = 'এই কিস্তি স্কিপ করা হয়েছে';
+        promoteNext();
+        await saveData();
+        render();
+        toast(`⚠️ ${dep.date} — স্কিপ করা হয়েছে`);
+      } else if (action === 'undo') {
+        dep.status = 'upcoming';
+        dep.note = '';
+        promoteNext();
+        await saveData();
+        render();
+        toast(`↩️ ${dep.date} — পূর্বাবস্থায় ফিরেছে`);
+      }
+    });
+  });
 }
 
-// Close popup when clicking outside
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.deposit-item')) closeAllPopups();
-});
+document.addEventListener('click', closeAll);
 
 let toastTimer;
-function showToast(msg) {
+function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
@@ -630,11 +423,11 @@ function showToast(msg) {
 }
 
 // Init
-loadState();
-// Ensure "next" is set correctly on load
-const hasNext = depositsData.some(d => d.status === 'next');
-if (!hasNext) promoteNextDeposit();
-rerender();
+loadData().then(() => {
+  const hasNext = deposits.some(d => d.status === 'next');
+  if (!hasNext) promoteNext();
+  render();
+});
 </script>
 </body>
 </html>
