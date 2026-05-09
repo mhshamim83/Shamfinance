@@ -220,7 +220,7 @@ function closeAll() {
 function render(deps) {
   const completed = deps.filter(d => d.status==='completed').length;
   const pending   = deps.filter(d => d.status==='upcoming'||d.status==='next').length;
-  const total     = deps.length;
+  const total     = deps.filter(d => d.status!=='matured').length; // 26 payable only
   const pct       = Math.round((completed/total)*100);
   const nextDep   = deps.find(d => d.status==='next');
 
@@ -234,7 +234,7 @@ function render(deps) {
     <div class="stat">
       <div class="stat-label">বাকি জমা</div>
       <div class="stat-value yellow">৳${(pending*AMT).toLocaleString()}</div>
-      <div class="stat-sub">${pending} কিস্তি বাকি</div>
+      <div class="stat-sub">${pending} কিস্তি বাকি (maturity ছাড়া)</div>
     </div>
     <div class="stat">
       <div class="stat-label">পরের কিস্তি</div>
@@ -243,8 +243,8 @@ function render(deps) {
     </div>
     <div class="stat">
       <div class="stat-label">মোট পরিকল্পনা</div>
-      <div class="stat-value purple">৳${(total*AMT).toLocaleString()}</div>
-      <div class="stat-sub">${total} × ৳${AMT}</div>
+      <div class="stat-value purple">৳6,500</div>
+      <div class="stat-sub">26 × ৳${AMT} (maturity আলাদা)</div>
     </div>
   </div>
   <div class="progress-box">
