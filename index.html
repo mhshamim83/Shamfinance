@@ -7,212 +7,155 @@
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --pink: #E91E8C;
-    --dark-pink: #C2185B;
-    --deep: #7B0D3E;
-    --bg: #0C080B;
-    --surface: #160F13;
-    --card: #1E1319;
-    --border: rgba(233,30,140,0.13);
-    --text: #F5ECF1;
-    --muted: #8A6878;
-    --green: #52C97A;
-    --yellow: #F5B731;
-    --purple: #C084FC;
-    --red: #F87171;
+    --pink:#E91E8C; --dark-pink:#C2185B;
+    --bg:#0C080B; --card:#1E1319;
+    --border:rgba(233,30,140,0.13); --text:#F5ECF1; --muted:#8A6878;
+    --green:#52C97A; --yellow:#F5B731; --purple:#C084FC; --red:#F87171;
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Hind Siliguri', sans-serif;
-    min-height: 100vh;
-  }
-  body::before {
-    content:'';
-    position:fixed; inset:0;
-    background:
-      radial-gradient(ellipse 60% 40% at 15% 10%, rgba(233,30,140,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 60% at 85% 90%, rgba(194,24,91,0.05) 0%, transparent 60%);
-    pointer-events:none; z-index:0;
-  }
-  .wrap { position:relative; z-index:1; max-width:640px; margin:0 auto; padding:24px 16px 80px; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Hind Siliguri',sans-serif;min-height:100vh}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(ellipse 60% 40% at 15% 10%,rgba(233,30,140,0.08) 0%,transparent 60%),
+               radial-gradient(ellipse 40% 60% at 85% 90%,rgba(194,24,91,0.05) 0%,transparent 60%)}
+  .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:24px 16px 80px}
 
-  /* Header */
-  .header { text-align:center; padding:28px 0 24px; }
-  .header h1 {
-    font-family:'Playfair Display', serif;
-    font-size:2rem; font-weight:900;
-    background: linear-gradient(135deg, #FF6EC7 0%, #E91E8C 50%, #C2185B 100%);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    letter-spacing:-1px; line-height:1.1;
-  }
-  .header p { color:var(--muted); font-size:0.82rem; margin-top:6px; letter-spacing:0.3px; }
-  .header-dot {
-    display:inline-block; width:8px; height:8px; border-radius:50%;
-    background:var(--green); box-shadow:0 0 10px var(--green);
-    margin-right:6px; animation:breathe 2s ease-in-out infinite;
-  }
-  @keyframes breathe { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  .header{text-align:center;padding:28px 0 22px}
+  .header h1{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+    background:linear-gradient(135deg,#FF6EC7 0%,#E91E8C 50%,#C2185B 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    letter-spacing:-1px;line-height:1.1}
+  .header p{color:var(--muted);font-size:0.82rem;margin-top:6px}
+  .sync-status{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;
+    font-size:0.65rem;padding:4px 12px;border-radius:100px;margin-top:10px;
+    border:1px solid var(--border);color:var(--muted);transition:all 0.3s}
+  .sync-status.synced{border-color:rgba(82,201,122,0.3);color:var(--green)}
+  .sync-status.syncing{border-color:rgba(245,183,49,0.3);color:var(--yellow)}
+  .sync-status.error{border-color:rgba(248,113,113,0.3);color:var(--red)}
+  .sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .sync-status.synced .sync-dot{animation:breathe 2s ease-in-out infinite}
+  @keyframes breathe{0%,100%{opacity:1}50%{opacity:0.3}}
 
-  /* Loading */
-  .loading {
-    display:flex; flex-direction:column; align-items:center;
-    justify-content:center; height:300px; gap:16px;
-  }
-  .spinner {
-    width:40px; height:40px; border-radius:50%;
-    border:3px solid var(--border);
-    border-top-color:var(--pink);
-    animation:spin 0.8s linear infinite;
-  }
-  @keyframes spin { to{transform:rotate(360deg)} }
-  .loading p { color:var(--muted); font-size:0.85rem; }
+  .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:280px;gap:16px}
+  .spinner{width:38px;height:38px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--pink);animation:spin 0.8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loading p{color:var(--muted);font-size:0.82rem}
 
-  /* Stats */
-  .stats { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:16px; }
-  .stat {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:16px; padding:16px 18px; position:relative; overflow:hidden;
-    transition:transform 0.2s;
-  }
-  .stat::after {
-    content:''; position:absolute; top:0; left:0; right:0; height:1.5px;
-    background:linear-gradient(90deg, transparent, var(--pink), transparent);
-  }
-  .stat:hover { transform:translateY(-2px); }
-  .stat-label { font-size:0.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-family:'DM Mono',monospace; margin-bottom:8px; }
-  .stat-value { font-family:'DM Mono',monospace; font-size:1.55rem; font-weight:500; line-height:1; }
-  .stat-value.pink { color:var(--pink); }
-  .stat-value.green { color:var(--green); }
-  .stat-value.yellow { color:var(--yellow); }
-  .stat-value.purple { color:var(--purple); }
-  .stat-sub { font-size:0.7rem; color:var(--muted); margin-top:4px; }
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;
+    position:relative;overflow:hidden;transition:transform 0.2s}
+  .stat::after{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--pink),transparent)}
+  .stat:hover{transform:translateY(-2px)}
+  .stat-label{font-size:0.67rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;
+    font-family:'DM Mono',monospace;margin-bottom:8px}
+  .stat-value{font-family:'DM Mono',monospace;font-size:1.5rem;font-weight:500;line-height:1}
+  .stat-value.pink{color:var(--pink)}.stat-value.green{color:var(--green)}
+  .stat-value.yellow{color:var(--yellow)}.stat-value.purple{color:var(--purple)}
+  .stat-sub{font-size:0.68rem;color:var(--muted);margin-top:4px}
 
-  /* Progress */
-  .progress-box {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:16px; padding:16px 18px; margin-bottom:20px;
-  }
-  .progress-meta { display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.78rem; color:var(--muted); }
-  .progress-meta strong { font-family:'DM Mono',monospace; color:var(--pink); }
-  .track { background:rgba(255,255,255,0.04); border-radius:100px; height:8px; overflow:hidden; }
-  .fill {
-    height:100%; border-radius:100px;
-    background:linear-gradient(90deg, var(--dark-pink), var(--pink), #FF6EC7);
-    box-shadow:0 0 14px rgba(233,30,140,0.4);
-    transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1);
-  }
+  .progress-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:18px}
+  .progress-meta{display:flex;justify-content:space-between;margin-bottom:10px;font-size:0.78rem;color:var(--muted)}
+  .progress-meta strong{font-family:'DM Mono',monospace;color:var(--pink)}
+  .track{background:rgba(255,255,255,0.04);border-radius:100px;height:8px;overflow:hidden}
+  .fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--dark-pink),var(--pink),#FF6EC7);
+    box-shadow:0 0 14px rgba(233,30,140,0.4);transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1)}
 
-  /* List */
-  .list-head {
-    font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted);
-    text-transform:uppercase; letter-spacing:1.2px; margin-bottom:10px; padding:0 2px;
-  }
-  .divider {
-    display:flex; align-items:center; gap:10px; margin:14px 0 8px;
-  }
-  .divider span { font-size:0.65rem; color:var(--muted); font-family:'DM Mono',monospace; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
-  .divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--border); }
+  .list-head{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);
+    text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;padding:0 2px}
+  .divider{display:flex;align-items:center;gap:10px;margin:14px 0 8px}
+  .divider span{font-size:0.65rem;color:var(--muted);font-family:'DM Mono',monospace;
+    text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
-  /* Deposit item */
-  .item {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:14px; padding:13px 15px;
-    margin-bottom:7px; display:flex; align-items:center; gap:13px;
-    transition:all 0.22s ease; position:relative; overflow:visible;
-  }
-  .item.completed { border-color:rgba(82,201,122,0.18); background:rgba(82,201,122,0.04); }
-  .item.next { border-color:rgba(245,183,49,0.35); background:rgba(245,183,49,0.05); box-shadow:0 0 18px rgba(245,183,49,0.07); }
-  .item.matured { border-color:rgba(192,132,252,0.25); background:rgba(192,132,252,0.04); }
-  .item.skipped { border-color:rgba(248,113,113,0.18); background:rgba(248,113,113,0.03); }
-  .item.clickable:hover { border-color:rgba(233,30,140,0.3); transform:translateX(4px); cursor:pointer; }
+  .item{background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:13px 15px;margin-bottom:7px;display:flex;align-items:center;gap:13px;
+    transition:all 0.22s ease;position:relative;overflow:visible}
+  .item.completed{border-color:rgba(82,201,122,0.18);background:rgba(82,201,122,0.04)}
+  .item.next{border-color:rgba(245,183,49,0.35);background:rgba(245,183,49,0.05);box-shadow:0 0 18px rgba(245,183,49,0.07)}
+  .item.matured{border-color:rgba(192,132,252,0.25);background:rgba(192,132,252,0.04)}
+  .item.skipped{border-color:rgba(248,113,113,0.18);background:rgba(248,113,113,0.03)}
+  .item.clickable:hover{border-color:rgba(233,30,140,0.3);transform:translateX(4px);cursor:pointer}
 
-  .dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-  .dot.completed { background:var(--green); box-shadow:0 0 7px rgba(82,201,122,0.7); }
-  .dot.next { background:var(--yellow); box-shadow:0 0 7px rgba(245,183,49,0.7); animation:blink 1.4s ease-in-out infinite; }
-  .dot.upcoming { background:var(--muted); }
-  .dot.matured { background:var(--purple); box-shadow:0 0 7px rgba(192,132,252,0.7); }
-  .dot.skipped { background:var(--red); }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .dot.completed{background:var(--green);box-shadow:0 0 7px rgba(82,201,122,0.7)}
+  .dot.next{background:var(--yellow);box-shadow:0 0 7px rgba(245,183,49,0.7);animation:blink 1.4s ease-in-out infinite}
+  .dot.upcoming{background:var(--muted)}
+  .dot.matured{background:var(--purple);box-shadow:0 0 7px rgba(192,132,252,0.7)}
+  .dot.skipped{background:var(--red)}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
 
-  .item-info { flex:1; min-width:0; }
-  .item-serial { font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--muted); margin-bottom:2px; }
-  .item-date { font-family:'DM Mono',monospace; font-size:0.92rem; font-weight:500; color:var(--text); }
-  .item-note { font-size:0.7rem; color:var(--muted); margin-top:2px; }
+  .item-info{flex:1;min-width:0}
+  .item-serial{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-bottom:2px}
+  .item-date{font-family:'DM Mono',monospace;font-size:0.92rem;font-weight:500;color:var(--text)}
+  .item-note{font-size:0.7rem;color:var(--muted);margin-top:2px}
+  .item-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+  .item-amt{font-family:'DM Mono',monospace;font-size:0.95rem;font-weight:500;color:var(--text)}
+  .badge{font-size:0.6rem;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:100px;white-space:nowrap}
+  .badge.completed{background:rgba(82,201,122,0.12);color:#86EFAC}
+  .badge.next{background:rgba(245,183,49,0.18);color:#FDE68A}
+  .badge.upcoming{background:rgba(138,104,120,0.15);color:var(--muted)}
+  .badge.matured{background:rgba(192,132,252,0.12);color:#E9D5FF}
+  .badge.skipped{background:rgba(248,113,113,0.12);color:#FCA5A5}
 
-  .item-right { display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
-  .item-amt { font-family:'DM Mono',monospace; font-size:0.95rem; font-weight:500; color:var(--text); }
-  .badge {
-    font-size:0.6rem; font-family:'DM Mono',monospace;
-    padding:2px 8px; border-radius:100px; white-space:nowrap;
-  }
-  .badge.completed { background:rgba(82,201,122,0.12); color:#86EFAC; }
-  .badge.next { background:rgba(245,183,49,0.18); color:#FDE68A; }
-  .badge.upcoming { background:rgba(138,104,120,0.15); color:var(--muted); }
-  .badge.matured { background:rgba(192,132,252,0.12); color:#E9D5FF; }
-  .badge.skipped { background:rgba(248,113,113,0.12); color:#FCA5A5; }
+  .popup{display:none;position:absolute;right:0;top:calc(100% + 6px);
+    background:#241828;border:1px solid rgba(233,30,140,0.25);border-radius:14px;
+    overflow:hidden;z-index:50;box-shadow:0 12px 40px rgba(0,0,0,0.6);min-width:190px;
+    animation:popIn 0.18s cubic-bezier(0.34,1.56,0.64,1)}
+  @keyframes popIn{from{opacity:0;transform:scale(0.88) translateY(-6px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  .item.open .popup{display:block}
+  .popup-title{font-size:0.62rem;font-family:'DM Mono',monospace;color:var(--muted);
+    padding:10px 12px 6px;text-transform:uppercase;letter-spacing:0.8px;
+    border-bottom:1px solid rgba(255,255,255,0.05)}
+  .pbtn{display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:0.82rem;
+    font-family:'Hind Siliguri',sans-serif;background:none;border:none;color:var(--text);
+    width:100%;text-align:left;cursor:pointer;transition:background 0.15s}
+  .pbtn:hover{background:rgba(233,30,140,0.1)}
+  .pbtn.pay{color:#86EFAC}.pbtn.skip{color:#FDE68A}.pbtn.undo{color:#C4B5FD}
+  .pbtn.cancel{color:var(--muted);border-top:1px solid rgba(255,255,255,0.05)}
 
-  /* Popup */
-  .popup {
-    display:none; position:absolute; right:0; top:calc(100% + 6px);
-    background:#241828; border:1px solid rgba(233,30,140,0.25);
-    border-radius:14px; overflow:hidden; z-index:50;
-    box-shadow:0 12px 40px rgba(0,0,0,0.6); min-width:180px;
-    animation:popIn 0.18s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  @keyframes popIn { from{opacity:0;transform:scale(0.88) translateY(-6px)} to{opacity:1;transform:scale(1) translateY(0)} }
-  .item.open .popup { display:block; }
-  .popup-title { font-size:0.62rem; font-family:'DM Mono',monospace; color:var(--muted); padding:10px 12px 6px; text-transform:uppercase; letter-spacing:0.8px; border-bottom:1px solid rgba(255,255,255,0.05); }
-  .pbtn {
-    display:flex; align-items:center; gap:9px;
-    padding:10px 14px; font-size:0.82rem;
-    font-family:'Hind Siliguri',sans-serif;
-    background:none; border:none; color:var(--text);
-    width:100%; text-align:left; cursor:pointer;
-    transition:background 0.15s;
-  }
-  .pbtn:hover { background:rgba(233,30,140,0.1); }
-  .pbtn.pay { color:#86EFAC; }
-  .pbtn.skip { color:#FDE68A; }
-  .pbtn.undo { color:#C4B5FD; }
-  .pbtn.cancel { color:var(--muted); border-top:1px solid rgba(255,255,255,0.05); }
-
-  /* Toast */
-  .toast {
-    position:fixed; bottom:28px; left:50%;
-    transform:translateX(-50%) translateY(80px);
-    background:#241828; border:1px solid rgba(233,30,140,0.3);
-    border-radius:100px; padding:11px 22px;
-    font-size:0.82rem; font-family:'DM Mono',monospace;
-    color:var(--text); z-index:100;
-    transition:transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
-    box-shadow:0 8px 30px rgba(0,0,0,0.4); white-space:nowrap;
-  }
-  .toast.show { transform:translateX(-50%) translateY(0); }
-
-  .hint { text-align:center; font-size:0.7rem; color:var(--muted); margin:8px 0 18px; opacity:0.7; }
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:#241828;border:1px solid rgba(233,30,140,0.3);border-radius:100px;
+    padding:11px 22px;font-size:0.82rem;font-family:'DM Mono',monospace;color:var(--text);
+    z-index:100;transition:transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow:0 8px 30px rgba(0,0,0,0.4);white-space:nowrap}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .hint{text-align:center;font-size:0.7rem;color:var(--muted);margin:6px 0 16px;opacity:0.7}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="header">
     <h1>Shamfinance<br>Deposit Tracker</h1>
-    <p><span class="header-dot"></span>প্রতি শুক্রবার ৳২৫০ · মেয়াদ ৬ মাস</p>
-  </div>
-
-  <div id="app">
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>ডেটা লোড হচ্ছে...</p>
+    <p>প্রতি শুক্রবার ৳২৫০ · মেয়াদ ৬ মাস</p>
+    <div class="sync-status syncing" id="syncStatus">
+      <div class="sync-dot"></div>
+      <span id="syncText">সংযোগ হচ্ছে...</span>
     </div>
+  </div>
+  <div id="app">
+    <div class="loading"><div class="spinner"></div><p>Firebase থেকে ডেটা লোড হচ্ছে...</p></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDA1ma6i6fjyEI1MkxlygnjOtPCXp4aWlY",
+  authDomain: "shamfinance-803db.firebaseapp.com",
+  databaseURL: "https://shamfinance-803db-default-rtdb.firebaseio.com",
+  projectId: "shamfinance-803db",
+  storageBucket: "shamfinance-803db.firebasestorage.app",
+  messagingSenderId: "884291849986",
+  appId: "1:884291849986:web:8c5d3406cddf2b0b3d7c1b"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getDatabase(firebaseApp);
+const depositsRef = ref(db, 'deposits');
 const AMT = 250;
-const STORAGE_KEY = 'shamfinance_deposits_v2';
 
 const DEFAULT_DEPOSITS = [
   {id:1,  date:"10 Apr 2026", status:"completed", note:"Deposit Completed on 10 Apr 26"},
@@ -246,55 +189,40 @@ const DEFAULT_DEPOSITS = [
 
 let deposits = [];
 
-// ── Storage: try window.storage first, fallback to localStorage ──
-async function loadData() {
-  // Try window.storage (artifact persistent storage)
-  if (window.storage) {
-    try {
-      const res = await window.storage.get(STORAGE_KEY);
-      if (res && res.value) {
-        deposits = JSON.parse(res.value);
-        return;
-      }
-    } catch(e) {}
-  }
-  // Fallback: localStorage
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) { deposits = JSON.parse(saved); return; }
-  } catch(e) {}
-  // Default
-  deposits = JSON.parse(JSON.stringify(DEFAULT_DEPOSITS));
+function setSyncStatus(state, text) {
+  const el = document.getElementById('syncStatus');
+  el.className = 'sync-status ' + state;
+  document.getElementById('syncText').textContent = text;
 }
 
-async function saveData() {
-  const json = JSON.stringify(deposits);
-  // Try window.storage
-  if (window.storage) {
-    try { await window.storage.set(STORAGE_KEY, json); } catch(e) {}
-  }
-  // Always also save to localStorage as backup
-  try { localStorage.setItem(STORAGE_KEY, json); } catch(e) {}
-}
-
-function promoteNext() {
-  deposits.forEach(d => { if (d.status === 'next') d.status = 'upcoming'; });
-  const n = deposits.find(d => d.status === 'upcoming');
+function promoteNext(deps) {
+  deps.forEach(d => { if (d.status === 'next') d.status = 'upcoming'; });
+  const n = deps.find(d => d.status === 'upcoming');
   if (n) { n.status = 'next'; n.note = 'Next Deposit Due'; }
+  return deps;
+}
+
+async function saveToFirebase(deps) {
+  setSyncStatus('syncing', 'সেভ হচ্ছে...');
+  try {
+    await set(depositsRef, deps);
+    setSyncStatus('synced', 'সব ডিভাইসে sync হয়েছে ✓');
+  } catch(e) {
+    setSyncStatus('error', 'সংযোগ ত্রুটি!');
+    showToast('❌ সেভ করা যায়নি!');
+  }
 }
 
 function closeAll() {
   document.querySelectorAll('.item.open').forEach(el => el.classList.remove('open'));
 }
 
-function render() {
-  const app = document.getElementById('app');
-  const completed = deposits.filter(d => d.status === 'completed').length;
-  const skipped   = deposits.filter(d => d.status === 'skipped').length;
-  const pending   = deposits.filter(d => d.status === 'upcoming' || d.status === 'next').length;
-  const total     = deposits.length;
-  const pct       = Math.round((completed / total) * 100);
-  const nextDep   = deposits.find(d => d.status === 'next');
+function render(deps) {
+  const completed = deps.filter(d => d.status==='completed').length;
+  const pending   = deps.filter(d => d.status==='upcoming'||d.status==='next').length;
+  const total     = deps.length;
+  const pct       = Math.round((completed/total)*100);
+  const nextDep   = deps.find(d => d.status==='next');
 
   let html = `
   <div class="stats">
@@ -310,7 +238,7 @@ function render() {
     </div>
     <div class="stat">
       <div class="stat-label">পরের কিস্তি</div>
-      <div class="stat-value green" style="font-size:0.95rem;padding-top:5px">${nextDep ? nextDep.date : '🎉 শেষ'}</div>
+      <div class="stat-value green" style="font-size:0.9rem;padding-top:5px">${nextDep?nextDep.date:'🎉 শেষ!'}</div>
       <div class="stat-sub">Next Deposit</div>
     </div>
     <div class="stat">
@@ -319,7 +247,6 @@ function render() {
       <div class="stat-sub">${total} × ৳${AMT}</div>
     </div>
   </div>
-
   <div class="progress-box">
     <div class="progress-meta">
       <span>অগ্রগতি — ${completed}/${total} কিস্তি</span>
@@ -327,19 +254,18 @@ function render() {
     </div>
     <div class="track"><div class="fill" style="width:${pct}%"></div></div>
   </div>
-
-  <p class="hint">💡 Upcoming বা Next কিস্তিতে ট্যাপ করুন</p>
+  <p class="hint">💡 Upcoming / Next কিস্তিতে ট্যাপ করুন</p>
   <div class="list-head">সম্পূর্ণ কিস্তি তালিকা</div>`;
 
   let lastGroup = null;
-  deposits.forEach(dep => {
-    const grp = (dep.status === 'completed' || dep.status === 'skipped') ? 'done' : 'pending';
+  deps.forEach(dep => {
+    const grp = (dep.status==='completed'||dep.status==='skipped') ? 'done' : 'pending';
     if (grp !== lastGroup) {
-      html += `<div class="divider"><span>${grp==='done' ? '✅ সম্পন্ন' : '⏳ আসন্ন'}</span></div>`;
+      html += `<div class="divider"><span>${grp==='done'?'✅ সম্পন্ন':'⏳ আসন্ন'}</span></div>`;
       lastGroup = grp;
     }
-    const clickable = dep.status === 'upcoming' || dep.status === 'next' || dep.status === 'skipped';
-    const badgeLabel = {completed:'✓ সম্পন্ন', next:'⏰ পরবর্তী', upcoming:'⏳ আসন্ন', matured:'🎉 Matured', skipped:'⚠ স্কিপ'}[dep.status] || '';
+    const clickable = dep.status==='upcoming'||dep.status==='next'||dep.status==='skipped';
+    const badgeLabel = {completed:'✓ সম্পন্ন',next:'⏰ পরবর্তী',upcoming:'⏳ আসন্ন',matured:'🎉 Matured',skipped:'⚠ স্কিপ'}[dep.status]||'';
 
     html += `
     <div class="item ${dep.status} ${clickable?'clickable':''}" data-id="${dep.id}">
@@ -347,27 +273,26 @@ function render() {
       <div class="item-info">
         <div class="item-serial">#${dep.id}</div>
         <div class="item-date">${dep.date}</div>
-        ${dep.note ? `<div class="item-note">${dep.note}</div>` : ''}
+        ${dep.note?`<div class="item-note">${dep.note}</div>`:''}
       </div>
       <div class="item-right">
         <div class="item-amt">৳${AMT}</div>
         <div class="badge ${dep.status}">${badgeLabel}</div>
       </div>
-      ${clickable ? `
+      ${clickable?`
       <div class="popup">
-        <div class="popup-title">অ্যাকশন</div>
-        ${dep.status !== 'skipped' ? `<button class="pbtn pay" data-action="pay" data-id="${dep.id}">✅ পেমেন্ট সম্পন্ন</button>` : ''}
-        ${dep.status !== 'skipped' ? `<button class="pbtn skip" data-action="skip" data-id="${dep.id}">⚠️ স্কিপ করুন</button>` : ''}
-        ${dep.status === 'skipped' ? `<button class="pbtn undo" data-action="undo" data-id="${dep.id}">↩️ পূর্বাবস্থায় ফিরুন</button>` : ''}
+        <div class="popup-title">অ্যাকশন বেছে নিন</div>
+        ${dep.status!=='skipped'?`<button class="pbtn pay" data-action="pay" data-id="${dep.id}">✅ পেমেন্ট সম্পন্ন</button>`:''}
+        ${dep.status!=='skipped'?`<button class="pbtn skip" data-action="skip" data-id="${dep.id}">⚠️ স্কিপ করুন</button>`:''}
+        ${dep.status==='skipped'?`<button class="pbtn undo" data-action="undo" data-id="${dep.id}">↩️ পূর্বাবস্থায় ফিরুন</button>`:''}
         <button class="pbtn cancel" data-action="close">✕ বাতিল</button>
-      </div>` : ''}
+      </div>`:''}
     </div>`;
   });
 
-  app.innerHTML = html;
+  document.getElementById('app').innerHTML = html;
 
-  // Bind events
-  app.querySelectorAll('.item.clickable').forEach(el => {
+  document.querySelectorAll('.item.clickable').forEach(el => {
     el.addEventListener('click', e => {
       if (e.target.closest('.pbtn')) return;
       const wasOpen = el.classList.contains('open');
@@ -377,56 +302,67 @@ function render() {
     });
   });
 
-  app.querySelectorAll('.pbtn').forEach(btn => {
+  document.querySelectorAll('.pbtn').forEach(btn => {
     btn.addEventListener('click', async e => {
       e.stopPropagation();
       const action = btn.dataset.action;
       const id = parseInt(btn.dataset.id);
-      if (action === 'close') { closeAll(); return; }
-      const dep = deposits.find(d => d.id === id);
+      if (action==='close') { closeAll(); return; }
+      const dep = deposits.find(d => d.id===id);
       if (!dep) return;
-      if (action === 'pay') {
-        dep.status = 'completed';
-        dep.note = `Deposit Completed ✓`;
-        promoteNext();
-        await saveData();
-        render();
-        toast(`✅ ${dep.date} — পেমেন্ট সম্পন্ন!`);
-      } else if (action === 'skip') {
-        dep.status = 'skipped';
-        dep.note = 'এই কিস্তি স্কিপ করা হয়েছে';
-        promoteNext();
-        await saveData();
-        render();
-        toast(`⚠️ ${dep.date} — স্কিপ করা হয়েছে`);
-      } else if (action === 'undo') {
-        dep.status = 'upcoming';
-        dep.note = '';
-        promoteNext();
-        await saveData();
-        render();
-        toast(`↩️ ${dep.date} — পূর্বাবস্থায় ফিরেছে`);
+      closeAll();
+      if (action==='pay') {
+        dep.status='completed'; dep.note='Deposit Completed ✓';
+        promoteNext(deposits);
+        await saveToFirebase(deposits);
+        showToast(`✅ ${dep.date} — পেমেন্ট সম্পন্ন!`);
+      } else if (action==='skip') {
+        dep.status='skipped'; dep.note='এই কিস্তি স্কিপ করা হয়েছে';
+        promoteNext(deposits);
+        await saveToFirebase(deposits);
+        showToast(`⚠️ ${dep.date} — স্কিপ করা হয়েছে`);
+      } else if (action==='undo') {
+        dep.status='upcoming'; dep.note='';
+        promoteNext(deposits);
+        await saveToFirebase(deposits);
+        showToast(`↩️ ${dep.date} — পূর্বাবস্থায় ফিরেছে`);
       }
     });
   });
 }
 
-document.addEventListener('click', closeAll);
-
 let toastTimer;
-function toast(msg) {
+function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent=msg; t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
+document.addEventListener('click', closeAll);
+
 // Init
-loadData().then(() => {
-  const hasNext = deposits.some(d => d.status === 'next');
-  if (!hasNext) promoteNext();
-  render();
+setSyncStatus('syncing','সংযোগ হচ্ছে...');
+
+get(depositsRef).then(snapshot => {
+  if (!snapshot.exists()) {
+    const seeded = promoteNext(JSON.parse(JSON.stringify(DEFAULT_DEPOSITS)));
+    set(depositsRef, seeded);
+  }
+});
+
+// Real-time listener — updates ALL devices instantly
+onValue(depositsRef, snapshot => {
+  if (snapshot.exists()) {
+    deposits = snapshot.val();
+    setSyncStatus('synced','সব ডিভাইসে sync চালু ✓');
+    render(deposits);
+  }
+}, err => {
+  setSyncStatus('error','সংযোগ ত্রুটি!');
+  deposits = JSON.parse(JSON.stringify(DEFAULT_DEPOSITS));
+  promoteNext(deposits);
+  render(deposits);
 });
 </script>
 </body>
