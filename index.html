@@ -3,157 +3,249 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💰 Shamfinance — Deposit Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<title>💰 Shamfinance</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --pink: #E91E8C; --dark-pink: #C2185B;
-    --bg: #0C080B; --surface: #160F13; --card: #1E1319;
-    --border: rgba(233,30,140,0.13); --text: #F5ECF1; --muted: #8A6878;
-    --green: #52C97A; --yellow: #F5B731; --purple: #C084FC; --red: #F87171;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:'Hind Siliguri',sans-serif; min-height:100vh; }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background: radial-gradient(ellipse 60% 40% at 15% 10%, rgba(233,30,140,0.08) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 60% at 85% 90%, rgba(194,24,91,0.05) 0%, transparent 60%);
-  }
-  .wrap { position:relative; z-index:1; max-width:640px; margin:0 auto; padding:24px 16px 80px; }
+:root{
+  --pink:#E91E8C;--dark-pink:#C2185B;
+  --blue:#3B82F6;--dark-blue:#1D4ED8;
+  --bg:#0C080B;--card:#1E1319;--card-blue:#131520;
+  --border-pink:rgba(233,30,140,0.15);--border-blue:rgba(59,130,246,0.15);
+  --text:#F5ECF1;--muted:#8A6878;
+  --green:#52C97A;--yellow:#F5B731;--purple:#C084FC;--red:#F87171;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Hind Siliguri',sans-serif;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 60% 40% at 10% 10%,rgba(233,30,140,0.07) 0%,transparent 55%),
+             radial-gradient(ellipse 50% 40% at 90% 85%,rgba(59,130,246,0.06) 0%,transparent 55%)}
 
-  /* Header */
-  .header { text-align:center; padding:28px 0 22px; }
-  .header h1 {
-    font-family:'Playfair Display',serif; font-size:2rem; font-weight:900;
-    background:linear-gradient(135deg,#FF6EC7 0%,#E91E8C 50%,#C2185B 100%);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    letter-spacing:-1px; line-height:1.1;
-  }
-  .header p { color:var(--muted); font-size:0.82rem; margin-top:6px; }
-  .sync-status {
-    display:inline-flex; align-items:center; gap:6px;
-    font-family:'DM Mono',monospace; font-size:0.65rem;
-    padding:4px 12px; border-radius:100px; margin-top:10px;
-    border:1px solid var(--border); color:var(--muted);
-    transition: all 0.3s;
-  }
-  .sync-status.synced { border-color:rgba(82,201,122,0.3); color:var(--green); }
-  .sync-status.syncing { border-color:rgba(245,183,49,0.3); color:var(--yellow); }
-  .sync-status.error { border-color:rgba(248,113,113,0.3); color:var(--red); }
-  .sync-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
-  .sync-status.synced .sync-dot { animation:breathe 2s ease-in-out infinite; }
-  .sync-status.syncing .sync-dot { animation:spin-dot 0.8s linear infinite; }
-  @keyframes breathe { 0%,100%{opacity:1} 50%{opacity:0.3} }
-  @keyframes spin-dot { to{transform:rotate(360deg)} }
+.wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:20px 14px 80px}
 
-  /* Loading */
-  .loading { display:flex; flex-direction:column; align-items:center; justify-content:center; height:280px; gap:16px; }
-  .spinner { width:38px; height:38px; border-radius:50%; border:3px solid var(--border); border-top-color:var(--pink); animation:spin 0.8s linear infinite; }
-  @keyframes spin { to{transform:rotate(360deg)} }
-  .loading p { color:var(--muted); font-size:0.82rem; }
+/* Header */
+.header{text-align:center;padding:24px 0 20px}
+.header h1{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900;
+  background:linear-gradient(135deg,#FF6EC7,#E91E8C,#C2185B);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-1px;line-height:1.1}
+.header p{color:var(--muted);font-size:0.8rem;margin-top:5px}
+.sync-status{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;
+  font-size:0.63rem;padding:3px 11px;border-radius:100px;margin-top:8px;
+  border:1px solid var(--border-pink);color:var(--muted);transition:all 0.3s}
+.sync-status.synced{border-color:rgba(82,201,122,0.3);color:var(--green)}
+.sync-status.syncing{border-color:rgba(245,183,49,0.3);color:var(--yellow)}
+.sync-status.error{border-color:rgba(248,113,113,0.3);color:var(--red)}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.sync-status.synced .sync-dot{animation:breathe 2s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:0.3}}
 
-  /* Stats */
-  .stats { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:14px; }
-  .stat {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:16px; padding:16px 18px; position:relative; overflow:hidden; transition:transform 0.2s;
-  }
-  .stat::after { content:''; position:absolute; top:0; left:0; right:0; height:1.5px; background:linear-gradient(90deg,transparent,var(--pink),transparent); }
-  .stat:hover { transform:translateY(-2px); }
-  .stat-label { font-size:0.67rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-family:'DM Mono',monospace; margin-bottom:8px; }
-  .stat-value { font-family:'DM Mono',monospace; font-size:1.5rem; font-weight:500; line-height:1; }
-  .stat-value.pink{color:var(--pink)} .stat-value.green{color:var(--green)} .stat-value.yellow{color:var(--yellow)} .stat-value.purple{color:var(--purple)}
-  .stat-sub { font-size:0.68rem; color:var(--muted); margin-top:4px; }
+/* Tab switcher */
+.tabs{display:flex;gap:8px;margin:0 0 20px;background:rgba(255,255,255,0.03);
+  border-radius:14px;padding:5px}
+.tab{flex:1;padding:10px;border:none;border-radius:10px;font-family:'Hind Siliguri',sans-serif;
+  font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.22s;
+  background:transparent;color:var(--muted)}
+.tab.active-dps{background:var(--pink);color:#fff;box-shadow:0 4px 16px rgba(233,30,140,0.3)}
+.tab.active-loan{background:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(59,130,246,0.3)}
+.tab:not(.active-dps):not(.active-loan):hover{color:var(--text);background:rgba(255,255,255,0.05)}
 
-  /* Progress */
-  .progress-box { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px 18px; margin-bottom:18px; }
-  .progress-meta { display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.78rem; color:var(--muted); }
-  .progress-meta strong { font-family:'DM Mono',monospace; color:var(--pink); }
-  .track { background:rgba(255,255,255,0.04); border-radius:100px; height:8px; overflow:hidden; }
-  .fill { height:100%; border-radius:100px; background:linear-gradient(90deg,var(--dark-pink),var(--pink),#FF6EC7); box-shadow:0 0 14px rgba(233,30,140,0.4); transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1); }
+/* Pages */
+.page{display:none}.page.active{display:block}
 
-  /* List */
-  .list-head { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:10px; padding:0 2px; }
-  .divider { display:flex; align-items:center; gap:10px; margin:14px 0 8px; }
-  .divider span { font-size:0.65rem; color:var(--muted); font-family:'DM Mono',monospace; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
-  .divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--border); }
+/* Loading */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:260px;gap:14px}
+.spinner{width:36px;height:36px;border-radius:50%;border:3px solid rgba(255,255,255,0.06);animation:spin 0.8s linear infinite}
+.spinner.pink{border-top-color:var(--pink)}
+.spinner.blue{border-top-color:var(--blue)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{color:var(--muted);font-size:0.8rem}
 
-  /* Item */
-  .item {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:14px; padding:13px 15px; margin-bottom:7px;
-    display:flex; align-items:center; gap:13px;
-    transition:all 0.22s ease; position:relative; overflow:visible;
-  }
-  .item.completed{border-color:rgba(82,201,122,0.18);background:rgba(82,201,122,0.04)}
-  .item.next{border-color:rgba(245,183,49,0.35);background:rgba(245,183,49,0.05);box-shadow:0 0 18px rgba(245,183,49,0.07)}
-  .item.matured{border-color:rgba(192,132,252,0.25);background:rgba(192,132,252,0.04)}
-  .item.skipped{border-color:rgba(248,113,113,0.18);background:rgba(248,113,113,0.03)}
-  .item.clickable:hover{border-color:rgba(233,30,140,0.3);transform:translateX(4px);cursor:pointer}
+/* Stats grid */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:13px}
+.stat{border-radius:15px;padding:15px 16px;position:relative;overflow:hidden;transition:transform 0.2s}
+.stat::after{content:'';position:absolute;top:0;left:0;right:0;height:1.5px}
+.stat:hover{transform:translateY(-2px)}
+.stat.pink-theme{background:var(--card);border:1px solid var(--border-pink)}
+.stat.pink-theme::after{background:linear-gradient(90deg,transparent,var(--pink),transparent)}
+.stat.blue-theme{background:var(--card-blue);border:1px solid var(--border-blue)}
+.stat.blue-theme::after{background:linear-gradient(90deg,transparent,var(--blue),transparent)}
+.stat-label{font-size:0.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;
+  font-family:'DM Mono',monospace;margin-bottom:7px}
+.stat-value{font-family:'DM Mono',monospace;font-size:1.45rem;font-weight:500;line-height:1}
+.sv-pink{color:var(--pink)}.sv-green{color:var(--green)}.sv-yellow{color:var(--yellow)}
+.sv-purple{color:var(--purple)}.sv-blue{color:var(--blue)}.sv-red{color:var(--red)}
+.stat-sub{font-size:0.67rem;color:var(--muted);margin-top:4px}
 
-  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-  .dot.completed{background:var(--green);box-shadow:0 0 7px rgba(82,201,122,0.7)}
-  .dot.next{background:var(--yellow);box-shadow:0 0 7px rgba(245,183,49,0.7);animation:blink 1.4s ease-in-out infinite}
-  .dot.upcoming{background:var(--muted)}
-  .dot.matured{background:var(--purple);box-shadow:0 0 7px rgba(192,132,252,0.7)}
-  .dot.skipped{background:var(--red)}
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+/* Progress */
+.progress-box{border-radius:15px;padding:15px 17px;margin-bottom:16px}
+.progress-box.pink-theme{background:var(--card);border:1px solid var(--border-pink)}
+.progress-box.blue-theme{background:var(--card-blue);border:1px solid var(--border-blue)}
+.progress-meta{display:flex;justify-content:space-between;margin-bottom:9px;font-size:0.77rem;color:var(--muted)}
+.progress-meta strong{font-family:'DM Mono',monospace}
+.pm-pink strong{color:var(--pink)}.pm-blue strong{color:var(--blue)}
+.track{background:rgba(255,255,255,0.04);border-radius:100px;height:7px;overflow:hidden}
+.fill-pink{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--dark-pink),var(--pink),#FF6EC7);
+  box-shadow:0 0 12px rgba(233,30,140,0.4);transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1)}
+.fill-blue{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--dark-blue),var(--blue),#60A5FA);
+  box-shadow:0 0 12px rgba(59,130,246,0.4);transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1)}
 
-  .item-info{flex:1;min-width:0}
-  .item-serial{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-bottom:2px}
-  .item-date{font-family:'DM Mono',monospace;font-size:0.92rem;font-weight:500;color:var(--text)}
-  .item-note{font-size:0.7rem;color:var(--muted);margin-top:2px}
-  .item-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-  .item-amt{font-family:'DM Mono',monospace;font-size:0.95rem;font-weight:500;color:var(--text)}
-  .badge{font-size:0.6rem;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:100px;white-space:nowrap}
-  .badge.completed{background:rgba(82,201,122,0.12);color:#86EFAC}
-  .badge.next{background:rgba(245,183,49,0.18);color:#FDE68A}
-  .badge.upcoming{background:rgba(138,104,120,0.15);color:var(--muted)}
-  .badge.matured{background:rgba(192,132,252,0.12);color:#E9D5FF}
-  .badge.skipped{background:rgba(248,113,113,0.12);color:#FCA5A5}
+/* List */
+.list-head{font-family:'DM Mono',monospace;font-size:0.63rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1.2px;margin-bottom:9px;padding:0 2px}
+.divider{display:flex;align-items:center;gap:10px;margin:12px 0 7px}
+.divider span{font-size:0.63rem;color:var(--muted);font-family:'DM Mono',monospace;
+  text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.05)}
+.hint{text-align:center;font-size:0.69rem;color:var(--muted);margin:4px 0 14px;opacity:0.65}
 
-  /* Popup */
-  .popup {
-    display:none; position:absolute; right:0; top:calc(100% + 6px);
-    background:#241828; border:1px solid rgba(233,30,140,0.25);
-    border-radius:14px; overflow:hidden; z-index:50;
-    box-shadow:0 12px 40px rgba(0,0,0,0.6); min-width:190px;
-    animation:popIn 0.18s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  @keyframes popIn{from{opacity:0;transform:scale(0.88) translateY(-6px)}to{opacity:1;transform:scale(1) translateY(0)}}
-  .item.open .popup{display:block}
-  .popup-title{font-size:0.62rem;font-family:'DM Mono',monospace;color:var(--muted);padding:10px 12px 6px;text-transform:uppercase;letter-spacing:0.8px;border-bottom:1px solid rgba(255,255,255,0.05)}
-  .pbtn{display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:0.82rem;font-family:'Hind Siliguri',sans-serif;background:none;border:none;color:var(--text);width:100%;text-align:left;cursor:pointer;transition:background 0.15s}
-  .pbtn:hover{background:rgba(233,30,140,0.1)}
-  .pbtn.pay{color:#86EFAC} .pbtn.skip{color:#FDE68A} .pbtn.undo{color:#C4B5FD} .pbtn.cancel{color:var(--muted);border-top:1px solid rgba(255,255,255,0.05)}
+/* Items — KEY FIX: overflow:visible on item, z-index on open */
+.item{border-radius:13px;padding:12px 14px;margin-bottom:6px;
+  display:flex;align-items:center;gap:12px;
+  transition:all 0.22s ease;position:relative;overflow:visible}
+.item.pink-card{background:var(--card);border:1px solid var(--border-pink)}
+.item.blue-card{background:var(--card-blue);border:1px solid var(--border-blue)}
+.item.completed{border-color:rgba(82,201,122,0.2);background:rgba(82,201,122,0.04)}
+.item.next-pink{border-color:rgba(245,183,49,0.35);background:rgba(245,183,49,0.05);box-shadow:0 0 16px rgba(245,183,49,0.07)}
+.item.next-blue{border-color:rgba(245,183,49,0.35);background:rgba(245,183,49,0.05);box-shadow:0 0 16px rgba(245,183,49,0.07)}
+.item.matured{border-color:rgba(192,132,252,0.25);background:rgba(192,132,252,0.04)}
+.item.skipped{border-color:rgba(248,113,113,0.2);background:rgba(248,113,113,0.03)}
+.item.clickable:hover{transform:translateX(3px);cursor:pointer}
+.item.pink-card.clickable:hover{border-color:rgba(233,30,140,0.3)}
+.item.blue-card.clickable:hover{border-color:rgba(59,130,246,0.3)}
+/* z-index boost when popup is open */
+.item.open{z-index:100}
+
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot.completed{background:var(--green);box-shadow:0 0 6px rgba(82,201,122,0.7)}
+.dot.next{background:var(--yellow);box-shadow:0 0 6px rgba(245,183,49,0.7);animation:blink 1.4s ease-in-out infinite}
+.dot.upcoming{background:var(--muted)}
+.dot.matured{background:var(--purple);box-shadow:0 0 6px rgba(192,132,252,0.7)}
+.dot.skipped{background:var(--red)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+.item-info{flex:1;min-width:0}
+.item-serial{font-family:'DM Mono',monospace;font-size:0.59rem;color:var(--muted);margin-bottom:2px}
+.item-date{font-family:'DM Mono',monospace;font-size:0.9rem;font-weight:500;color:var(--text)}
+.item-note{font-size:0.69rem;color:var(--muted);margin-top:1px}
+.item-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.item-amt{font-family:'DM Mono',monospace;font-size:0.92rem;font-weight:500;color:var(--text)}
+.badge{font-size:0.59rem;font-family:'DM Mono',monospace;padding:2px 7px;border-radius:100px;white-space:nowrap}
+.badge.completed{background:rgba(82,201,122,0.12);color:#86EFAC}
+.badge.next{background:rgba(245,183,49,0.18);color:#FDE68A}
+.badge.upcoming{background:rgba(138,104,120,0.15);color:var(--muted)}
+.badge.matured{background:rgba(192,132,252,0.12);color:#E9D5FF}
+.badge.skipped{background:rgba(248,113,113,0.12);color:#FCA5A5}
+
+/* Popup — fixed position relative to item, always on top */
+.popup{
+  display:none;
+  position:absolute;
+  right:0;
+  top:calc(100% + 5px);
+  background:#1E1828;
+  border:1px solid rgba(233,30,140,0.25);
+  border-radius:13px;
+  overflow:hidden;
+  z-index:999;
+  box-shadow:0 16px 48px rgba(0,0,0,0.7);
+  min-width:200px;
+  animation:popIn 0.17s cubic-bezier(0.34,1.56,0.64,1);
+}
+.popup.loan-popup{border-color:rgba(59,130,246,0.3)}
+@keyframes popIn{from{opacity:0;transform:scale(0.85) translateY(-8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.item.open .popup{display:block}
+.popup-title{font-size:0.6rem;font-family:'DM Mono',monospace;color:var(--muted);
+  padding:9px 12px 5px;text-transform:uppercase;letter-spacing:0.8px;
+  border-bottom:1px solid rgba(255,255,255,0.05)}
+.pbtn{display:flex;align-items:center;gap:8px;padding:9px 13px;font-size:0.81rem;
+  font-family:'Hind Siliguri',sans-serif;background:none;border:none;color:var(--text);
+  width:100%;text-align:left;cursor:pointer;transition:background 0.14s}
+.pbtn:hover{background:rgba(255,255,255,0.05)}
+.pbtn.pay{color:#86EFAC}.pbtn.skip{color:#FDE68A}.pbtn.undo{color:#C4B5FD}
+.pbtn.edit{color:#93C5FD}.pbtn.cancel{color:var(--muted);border-top:1px solid rgba(255,255,255,0.05)}
+
+/* Edit date modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;
+  align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:#1A1228;border:1px solid rgba(59,130,246,0.25);border-radius:18px;
+  padding:24px;width:90%;max-width:340px;animation:popIn 0.2s cubic-bezier(0.34,1.56,0.64,1)}
+.modal h3{font-family:'DM Mono',monospace;font-size:0.85rem;color:var(--blue);margin-bottom:6px}
+.modal p{font-size:0.78rem;color:var(--muted);margin-bottom:18px}
+.modal input[type="date"]{width:100%;background:#0F0D1A;border:1px solid rgba(59,130,246,0.3);
+  border-radius:10px;padding:10px 14px;color:var(--text);font-size:0.9rem;
+  font-family:'DM Mono',monospace;outline:none;margin-bottom:16px}
+.modal input[type="date"]:focus{border-color:var(--blue)}
+.modal-btns{display:flex;gap:8px}
+.modal-btn{flex:1;padding:10px;border:none;border-radius:10px;font-family:'Hind Siliguri',sans-serif;
+  font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.15s}
+.modal-btn.save{background:var(--blue);color:#fff}
+.modal-btn.save:hover{background:var(--dark-blue)}
+.modal-btn.cancel-modal{background:rgba(255,255,255,0.06);color:var(--muted)}
+.modal-btn.cancel-modal:hover{background:rgba(255,255,255,0.1)}
+
+
+.reset-btn{display:block;margin:10px auto 0;padding:6px 16px;border:1px solid rgba(248,113,113,0.3);
+  border-radius:100px;background:transparent;color:var(--red);font-size:0.65rem;
+  font-family:'DM Mono',monospace;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px}
+.reset-btn:hover{background:rgba(248,113,113,0.1)}
 
   /* Toast */
-  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:#241828;border:1px solid rgba(233,30,140,0.3);border-radius:100px;padding:11px 22px;font-size:0.82rem;font-family:'DM Mono',monospace;color:var(--text);z-index:100;transition:transform 0.38s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 8px 30px rgba(0,0,0,0.4);white-space:nowrap}
-  .toast.show{transform:translateX(-50%) translateY(0)}
-
-  .hint{text-align:center;font-size:0.7rem;color:var(--muted);margin:6px 0 16px;opacity:0.7}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#1E1828;border:1px solid rgba(233,30,140,0.3);border-radius:100px;
+  padding:10px 20px;font-size:0.8rem;font-family:'DM Mono',monospace;color:var(--text);
+  z-index:2000;transition:transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 8px 30px rgba(0,0,0,0.5);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="header">
-    <h1>Shamfinance<br>Deposit Tracker</h1>
-    <p>প্রতি শুক্রবার ৳২৫০ · মেয়াদ ৬ মাস</p>
+    <h1>Shamfinance</h1>
+    <p>আপনার সঞ্চয় ও ঋণ ট্র্যাকার</p>
     <div class="sync-status syncing" id="syncStatus">
       <div class="sync-dot"></div>
       <span id="syncText">সংযোগ হচ্ছে...</span>
     </div>
+  
+    <button class="reset-btn" onclick="resetAllData()">⟳ ডেটা রিসেট করুন</button>
   </div>
-  <div id="app">
-    <div class="loading"><div class="spinner"></div><p>Firebase থেকে ডেটা লোড হচ্ছে...</p></div>
+
+  <div class="tabs">
+    <button class="tab active-dps" id="tab-dps" onclick="switchTab('dps')">💰 DPS</button>
+    <button class="tab" id="tab-loan" onclick="switchTab('loan')">🏦 লোন</button>
+  </div>
+
+  <!-- DPS Page -->
+  <div class="page active" id="page-dps">
+    <div class="loading"><div class="spinner pink"></div><p>DPS ডেটা লোড হচ্ছে...</p></div>
+  </div>
+
+  <!-- Loan Page -->
+  <div class="page" id="page-loan">
+    <div class="loading"><div class="spinner blue"></div><p>লোন ডেটা লোড হচ্ছে...</p></div>
   </div>
 </div>
+
+<!-- Edit Date Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>📅 তারিখ পরিবর্তন করুন</h3>
+    <p id="editModalDesc">কিস্তির তারিখ পরিবর্তন করুন</p>
+    <input type="date" id="editDateInput">
+    <div class="modal-btns">
+      <button class="modal-btn save" onclick="saveEditDate()">✓ সেভ করুন</button>
+      <button class="modal-btn cancel-modal" onclick="closeModal()">✕ বাতিল</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDA1ma6i6fjyEI1MkxlygnjOtPCXp4aWlY",
@@ -162,17 +254,20 @@ const firebaseConfig = {
   projectId: "shamfinance-803db",
   storageBucket: "shamfinance-803db.firebasestorage.app",
   messagingSenderId: "884291849986",
-  appId: "1:884291849986:web:8c5d3406cddf2b0b3d7c1b",
-  measurementId: "G-12WWWTKW3J"
+  appId: "1:884291849986:web:8c5d3406cddf2b0b3d7c1b"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const depositsRef = ref(db, 'deposits');
+const fbApp = initializeApp(firebaseConfig);
+const db = getDatabase(fbApp);
+const dpsRef = ref(db, 'deposits');
+const loanRef = ref(db, 'loan');
 
-const AMT = 250;
+const DPS_AMT = 250;
+const LOAN_AMT = 5000;
 
-const DEFAULT_DEPOSITS = [
+// ── DEFAULT DATA ──────────────────────────────────────────────────────────
+
+const DEFAULT_DPS = [
   {id:1,  date:"10 Apr 2026", status:"completed", note:"Deposit Completed on 10 Apr 26"},
   {id:2,  date:"17 Apr 2026", status:"completed", note:"Deposit Completed on 17 Apr 26"},
   {id:3,  date:"24 Apr 2026", status:"completed", note:"Deposit Completed on 24 Apr 26"},
@@ -202,114 +297,281 @@ const DEFAULT_DEPOSITS = [
   {id:27, date:"09 Oct 2026", status:"matured",   note:"Ready For Disbursement 🎉"},
 ];
 
-let deposits = [];
+const DEFAULT_LOAN = [
+  {id:1,  date:"13 Nov 2025", status:"completed", note:""},
+  {id:2,  date:"11 Dec 2025", status:"completed", note:""},
+  {id:3,  date:"08 Jan 2026", status:"completed", note:""},
+  {id:4,  date:"12 Feb 2026", status:"completed", note:""},
+  {id:5,  date:"12 Mar 2026", status:"completed", note:""},
+  {id:6,  date:"09 Apr 2026", status:"completed", note:""},
+  {id:7,  date:"14 May 2026", status:"next",      note:"Next Payment Due"},
+  {id:8,  date:"11 Jun 2026", status:"upcoming",  note:""},
+  {id:9,  date:"09 Jul 2026", status:"upcoming",  note:""},
+  {id:10, date:"13 Aug 2026", status:"upcoming",  note:""},
+  {id:11, date:"10 Sep 2026", status:"upcoming",  note:""},
+];
 
+let dpsData = [];
+let loanData = [];
+let currentTab = 'dps';
+let editingLoanId = null;
+
+// ── SYNC STATUS ───────────────────────────────────────────────────────────
 function setSyncStatus(state, text) {
   const el = document.getElementById('syncStatus');
-  const tx = document.getElementById('syncText');
   el.className = 'sync-status ' + state;
-  tx.textContent = text;
+  document.getElementById('syncText').textContent = text;
 }
 
+// ── HELPERS ───────────────────────────────────────────────────────────────
 function promoteNext(deps) {
-  deps.forEach(d => { if (d.status === 'next') d.status = 'upcoming'; });
-  const n = deps.find(d => d.status === 'upcoming');
-  if (n) { n.status = 'next'; n.note = 'Next Deposit Due'; }
-  return deps;
-}
-
-async function saveToFirebase(deps) {
-  setSyncStatus('syncing', 'সেভ হচ্ছে...');
-  try {
-    await set(depositsRef, deps);
-    setSyncStatus('synced', 'সব ডিভাইসে sync হয়েছে ✓');
-  } catch(e) {
-    setSyncStatus('error', 'সংযোগ ত্রুটি!');
-    toast('❌ Firebase save error!');
-  }
+  deps.forEach(d => { if (d.status==='next') d.status='upcoming'; });
+  const n = deps.find(d => d.status==='upcoming');
+  if (n) { n.status='next'; n.note = deps===loanData ? 'Next Payment Due' : 'Next Deposit Due'; }
 }
 
 function closeAll() {
   document.querySelectorAll('.item.open').forEach(el => el.classList.remove('open'));
 }
 
-function render(deps) {
-  const completed = deps.filter(d => d.status === 'completed').length;
-  const pending   = deps.filter(d => d.status === 'upcoming' || d.status === 'next').length;
-  const total     = deps.length;
-  const pct       = Math.round((completed / total) * 100);
-  const nextDep   = deps.find(d => d.status === 'next');
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── TAB SWITCH ────────────────────────────────────────────────────────────
+window.switchTab = function(tab) {
+  currentTab = tab;
+  closeAll();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.className = 'tab');
+  document.getElementById('page-' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active-' + tab);
+};
+
+// ── SAVE ──────────────────────────────────────────────────────────────────
+async function saveDps() {
+  setSyncStatus('syncing','সেভ হচ্ছে...');
+  try {
+    await set(dpsRef, dpsData);
+    setSyncStatus('synced','সব ডিভাইসে sync ✓');
+  } catch(e) { setSyncStatus('error','ত্রুটি!'); showToast('❌ সেভ হয়নি'); }
+}
+
+async function saveLoan() {
+  setSyncStatus('syncing','সেভ হচ্ছে...');
+  try {
+    await set(loanRef, loanData);
+    setSyncStatus('synced','সব ডিভাইসে sync ✓');
+  } catch(e) { setSyncStatus('error','ত্রুটি!'); showToast('❌ সেভ হয়নি'); }
+}
+
+// ── EDIT MODAL ────────────────────────────────────────────────────────────
+window.openEditModal = function(id) {
+  editingLoanId = id;
+  const dep = loanData.find(d => d.id === id);
+  if (!dep) return;
+  // Convert "13 Nov 2025" -> "2025-11-13"
+  const months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',
+                  Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+  const parts = dep.date.split(' ');
+  const iso = `${parts[2]}-${months[parts[1]]}-${parts[0].padStart(2,'0')}`;
+  document.getElementById('editDateInput').value = iso;
+  document.getElementById('editModalDesc').textContent = `কিস্তি #${id} — ${dep.date}`;
+  document.getElementById('editModal').classList.add('open');
+};
+
+window.closeModal = function() {
+  document.getElementById('editModal').classList.remove('open');
+  editingLoanId = null;
+};
+
+window.saveEditDate = async function() {
+  const input = document.getElementById('editDateInput').value;
+  if (!input || !editingLoanId) return;
+  const d = new Date(input);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const formatted = `${String(d.getDate()).padStart(2,'0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  const dep = loanData.find(x => x.id === editingLoanId);
+  if (dep) {
+    dep.date = formatted;
+    await saveLoan();
+    renderLoan(loanData);
+    showToast(`📅 কিস্তি #${editingLoanId} — ${formatted} তে পরিবর্তন হয়েছে`);
+  }
+  closeModal();
+};
+
+// ── RENDER DPS ────────────────────────────────────────────────────────────
+function renderDps(deps) {
+  const completed = deps.filter(d => d.status==='completed').length;
+  const pending   = deps.filter(d => d.status==='upcoming'||d.status==='next').length;
+  const payable   = deps.filter(d => d.status!=='matured').length;
+  const pct       = Math.round((completed/payable)*100);
+  const nextDep   = deps.find(d => d.status==='next');
 
   let html = `
   <div class="stats">
-    <div class="stat">
+    <div class="stat pink-theme">
       <div class="stat-label">মোট জমা</div>
-      <div class="stat-value pink">৳${(completed*AMT).toLocaleString()}</div>
+      <div class="stat-value sv-pink">৳${(completed*DPS_AMT).toLocaleString()}</div>
       <div class="stat-sub">${completed} কিস্তি সম্পন্ন</div>
     </div>
-    <div class="stat">
+    <div class="stat pink-theme">
       <div class="stat-label">বাকি জমা</div>
-      <div class="stat-value yellow">৳${(pending*AMT).toLocaleString()}</div>
+      <div class="stat-value sv-yellow">৳${(pending*DPS_AMT).toLocaleString()}</div>
       <div class="stat-sub">${pending} কিস্তি বাকি</div>
     </div>
-    <div class="stat">
+    <div class="stat pink-theme">
       <div class="stat-label">পরের কিস্তি</div>
-      <div class="stat-value green" style="font-size:0.92rem;padding-top:5px">${nextDep ? nextDep.date : '🎉 শেষ!'}</div>
-      <div class="stat-sub">Next Deposit</div>
+      <div class="stat-value sv-green" style="font-size:0.88rem;padding-top:5px">${nextDep?nextDep.date:'🎉 শেষ!'}</div>
+      <div class="stat-sub">প্রতি শুক্রবার</div>
     </div>
-    <div class="stat">
+    <div class="stat pink-theme">
       <div class="stat-label">মোট পরিকল্পনা</div>
-      <div class="stat-value purple">৳${(total*AMT).toLocaleString()}</div>
-      <div class="stat-sub">${total} × ৳${AMT}</div>
+      <div class="stat-value sv-purple">৳6,500</div>
+      <div class="stat-sub">26 × ৳250</div>
     </div>
   </div>
-  <div class="progress-box">
-    <div class="progress-meta">
-      <span>অগ্রগতি — ${completed}/${total} কিস্তি</span>
+  <div class="progress-box pink-theme">
+    <div class="progress-meta pm-pink">
+      <span>অগ্রগতি — ${completed}/${payable} কিস্তি</span>
       <strong>${pct}%</strong>
     </div>
-    <div class="track"><div class="fill" style="width:${pct}%"></div></div>
+    <div class="track"><div class="fill-pink" style="width:${pct}%"></div></div>
   </div>
   <p class="hint">💡 Upcoming / Next কিস্তিতে ট্যাপ করুন</p>
-  <div class="list-head">সম্পূর্ণ কিস্তি তালিকা</div>`;
+  <div class="list-head">সম্পূর্ণ DPS তালিকা</div>`;
 
-  let lastGroup = null;
+  let lastGrp = null;
   deps.forEach(dep => {
     const grp = (dep.status==='completed'||dep.status==='skipped') ? 'done' : 'pending';
-    if (grp !== lastGroup) {
+    if (grp!==lastGrp) {
       html += `<div class="divider"><span>${grp==='done'?'✅ সম্পন্ন':'⏳ আসন্ন'}</span></div>`;
-      lastGroup = grp;
+      lastGrp = grp;
     }
     const clickable = dep.status==='upcoming'||dep.status==='next'||dep.status==='skipped';
-    const badgeLabel = {completed:'✓ সম্পন্ন',next:'⏰ পরবর্তী',upcoming:'⏳ আসন্ন',matured:'🎉 Matured',skipped:'⚠ স্কিপ'}[dep.status]||'';
+    const bl = {completed:'✓ সম্পন্ন',next:'⏰ পরবর্তী',upcoming:'⏳ আসন্ন',matured:'🎉 Matured',skipped:'⚠ স্কিপ'}[dep.status]||'';
+    const dotCls = dep.status==='next' ? 'next' : dep.status;
 
     html += `
-    <div class="item ${dep.status} ${clickable?'clickable':''}" data-id="${dep.id}">
-      <div class="dot ${dep.status}"></div>
+    <div class="item pink-card ${dep.status==='next'?'next-pink':dep.status} ${clickable?'clickable':''}" data-id="${dep.id}">
+      <div class="dot ${dotCls}"></div>
       <div class="item-info">
         <div class="item-serial">#${dep.id}</div>
         <div class="item-date">${dep.date}</div>
         ${dep.note?`<div class="item-note">${dep.note}</div>`:''}
       </div>
       <div class="item-right">
-        <div class="item-amt">৳${AMT}</div>
-        <div class="badge ${dep.status}">${badgeLabel}</div>
+        <div class="item-amt">৳${DPS_AMT}</div>
+        <div class="badge ${dep.status==='next'?'next':dep.status}">${bl}</div>
       </div>
       ${clickable?`
       <div class="popup">
-        <div class="popup-title">অ্যাকশন বেছে নিন</div>
-        ${dep.status!=='skipped'?`<button class="pbtn pay" data-action="pay" data-id="${dep.id}">✅ পেমেন্ট সম্পন্ন</button>`:''}
-        ${dep.status!=='skipped'?`<button class="pbtn skip" data-action="skip" data-id="${dep.id}">⚠️ স্কিপ করুন</button>`:''}
-        ${dep.status==='skipped'?`<button class="pbtn undo" data-action="undo" data-id="${dep.id}">↩️ পূর্বাবস্থায় ফিরুন</button>`:''}
+        <div class="popup-title">DPS — কিস্তি #${dep.id}</div>
+        ${dep.status!=='skipped'?`<button class="pbtn pay" data-action="pay" data-id="${dep.id}" data-type="dps">✅ পেমেন্ট সম্পন্ন</button>`:''}
+        ${dep.status!=='skipped'?`<button class="pbtn skip" data-action="skip" data-id="${dep.id}" data-type="dps">⚠️ স্কিপ করুন</button>`:''}
+        ${dep.status==='skipped'?`<button class="pbtn undo" data-action="undo" data-id="${dep.id}" data-type="dps">↩️ পূর্বাবস্থায়</button>`:''}
         <button class="pbtn cancel" data-action="close">✕ বাতিল</button>
       </div>`:''}
     </div>`;
   });
 
-  document.getElementById('app').innerHTML = html;
+  document.getElementById('page-dps').innerHTML = html;
+  bindItemEvents('page-dps');
+}
 
-  // Bind click events
-  document.querySelectorAll('.item.clickable').forEach(el => {
+// ── RENDER LOAN ───────────────────────────────────────────────────────────
+function renderLoan(deps) {
+  const completed = deps.filter(d => d.status==='completed').length;
+  const pending   = deps.filter(d => d.status==='upcoming'||d.status==='next').length;
+  const total     = deps.length;
+  const pct       = Math.round((completed/total)*100);
+  const nextDep   = deps.find(d => d.status==='next');
+  const paidAmt   = completed * LOAN_AMT;
+  const remAmt    = pending * LOAN_AMT;
+
+  let html = `
+  <div class="stats">
+    <div class="stat blue-theme">
+      <div class="stat-label">পরিশোধিত</div>
+      <div class="stat-value sv-blue">৳${paidAmt.toLocaleString()}</div>
+      <div class="stat-sub">${completed} কিস্তি দেওয়া হয়েছে</div>
+    </div>
+    <div class="stat blue-theme">
+      <div class="stat-label">বাকি ঋণ</div>
+      <div class="stat-value sv-red">৳${remAmt.toLocaleString()}</div>
+      <div class="stat-sub">${pending} কিস্তি বাকি আছে</div>
+    </div>
+    <div class="stat blue-theme">
+      <div class="stat-label">পরের কিস্তি</div>
+      <div class="stat-value sv-yellow" style="font-size:0.88rem;padding-top:5px">${nextDep?nextDep.date:'✅ শেষ!'}</div>
+      <div class="stat-sub">প্রতি মাসে ১৫র আগের বৃহস্পতিবার</div>
+    </div>
+    <div class="stat blue-theme">
+      <div class="stat-label">মোট ঋণ</div>
+      <div class="stat-value sv-purple">৳${(total*LOAN_AMT).toLocaleString()}</div>
+      <div class="stat-sub">${total} × ৳${LOAN_AMT.toLocaleString()}</div>
+    </div>
+  </div>
+  <div class="progress-box blue-theme">
+    <div class="progress-meta pm-blue">
+      <span>পরিশোধ — ${completed}/${total} কিস্তি</span>
+      <strong>${pct}%</strong>
+    </div>
+    <div class="track"><div class="fill-blue" style="width:${pct}%"></div></div>
+  </div>
+  <p class="hint">💡 কিস্তিতে ট্যাপ করে পেমেন্ট বা তারিখ পরিবর্তন করুন</p>
+  <div class="list-head">সম্পূর্ণ লোন কিস্তি তালিকা</div>`;
+
+  let lastGrp = null;
+  deps.forEach(dep => {
+    const grp = (dep.status==='completed'||dep.status==='skipped') ? 'done' : 'pending';
+    if (grp!==lastGrp) {
+      html += `<div class="divider"><span>${grp==='done'?'✅ পরিশোধিত':'⏳ বাকি'}</span></div>`;
+      lastGrp = grp;
+    }
+    const clickable = dep.status==='upcoming'||dep.status==='next'||dep.status==='skipped'||dep.status==='completed';
+    const bl = {completed:'✓ পরিশোধ',next:'⏰ পরবর্তী',upcoming:'⏳ বাকি',skipped:'⚠ স্কিপ'}[dep.status]||'';
+    const dotCls = dep.status==='next' ? 'next' : dep.status;
+
+    html += `
+    <div class="item blue-card ${dep.status==='next'?'next-blue':dep.status} ${clickable?'clickable':''}" data-id="${dep.id}">
+      <div class="dot ${dotCls}"></div>
+      <div class="item-info">
+        <div class="item-serial">#${dep.id}</div>
+        <div class="item-date">${dep.date}</div>
+        ${dep.note?`<div class="item-note">${dep.note}</div>`:''}
+      </div>
+      <div class="item-right">
+        <div class="item-amt">৳${LOAN_AMT.toLocaleString()}</div>
+        <div class="badge ${dep.status==='next'?'next':dep.status}">${bl}</div>
+      </div>
+      ${clickable?`
+      <div class="popup loan-popup">
+        <div class="popup-title">লোন — কিস্তি #${dep.id}</div>
+        ${dep.status!=='completed'&&dep.status!=='skipped'?`<button class="pbtn pay" data-action="pay" data-id="${dep.id}" data-type="loan">✅ পেমেন্ট সম্পন্ন</button>`:''}
+        ${dep.status!=='skipped'?`<button class="pbtn edit" data-action="edit" data-id="${dep.id}">📅 তারিখ পরিবর্তন</button>`:''}
+        ${dep.status!=='completed'&&dep.status!=='skipped'?`<button class="pbtn skip" data-action="skip" data-id="${dep.id}" data-type="loan">⚠️ স্কিপ করুন</button>`:''}
+        ${dep.status==='skipped'?`<button class="pbtn undo" data-action="undo" data-id="${dep.id}" data-type="loan">↩️ পূর্বাবস্থায়</button>`:''}
+        ${dep.status==='completed'?`<button class="pbtn undo" data-action="undo" data-id="${dep.id}" data-type="loan">↩️ পূর্বাবস্থায়</button>`:''}
+        <button class="pbtn cancel" data-action="close">✕ বাতিল</button>
+      </div>`:''}
+    </div>`;
+  });
+
+  document.getElementById('page-loan').innerHTML = html;
+  bindItemEvents('page-loan');
+}
+
+// ── BIND EVENTS ───────────────────────────────────────────────────────────
+function bindItemEvents(pageId) {
+  const page = document.getElementById(pageId);
+
+  page.querySelectorAll('.item.clickable').forEach(el => {
     el.addEventListener('click', e => {
       if (e.target.closest('.pbtn')) return;
       const wasOpen = el.classList.contains('open');
@@ -319,75 +581,109 @@ function render(deps) {
     });
   });
 
-  document.querySelectorAll('.pbtn').forEach(btn => {
+  page.querySelectorAll('.pbtn').forEach(btn => {
     btn.addEventListener('click', async e => {
       e.stopPropagation();
       const action = btn.dataset.action;
       const id = parseInt(btn.dataset.id);
-      if (action === 'close') { closeAll(); return; }
+      const type = btn.dataset.type;
+      if (action==='close') { closeAll(); return; }
+      if (action==='edit') { closeAll(); window.openEditModal(id); return; }
 
-      const dep = deposits.find(d => d.id === id);
+      const arr = type==='dps' ? dpsData : loanData;
+      const dep = arr.find(d => d.id===id);
       if (!dep) return;
       closeAll();
 
-      if (action === 'pay') {
-        dep.status = 'completed';
-        dep.note = 'Deposit Completed ✓';
-        promoteNext(deposits);
-        await saveToFirebase(deposits);
-        toast(`✅ ${dep.date} — পেমেন্ট সম্পন্ন!`);
-      } else if (action === 'skip') {
-        dep.status = 'skipped';
-        dep.note = 'এই কিস্তি স্কিপ করা হয়েছে';
-        promoteNext(deposits);
-        await saveToFirebase(deposits);
-        toast(`⚠️ ${dep.date} — স্কিপ করা হয়েছে`);
-      } else if (action === 'undo') {
-        dep.status = 'upcoming';
-        dep.note = '';
-        promoteNext(deposits);
-        await saveToFirebase(deposits);
-        toast(`↩️ ${dep.date} — পূর্বাবস্থায় ফিরেছে`);
+      if (action==='pay') {
+        dep.status='completed';
+        dep.note = type==='dps' ? 'Deposit Completed ✓' : 'পরিশোধ সম্পন্ন ✓';
+        promoteNext(arr);
+        type==='dps' ? await saveDps() : await saveLoan();
+        type==='dps' ? renderDps(dpsData) : renderLoan(loanData);
+        showToast(`✅ ${dep.date} — পেমেন্ট সম্পন্ন!`);
+      } else if (action==='skip') {
+        dep.status='skipped';
+        dep.note='এই কিস্তি স্কিপ করা হয়েছে';
+        promoteNext(arr);
+        type==='dps' ? await saveDps() : await saveLoan();
+        type==='dps' ? renderDps(dpsData) : renderLoan(loanData);
+        showToast(`⚠️ ${dep.date} — স্কিপ`);
+      } else if (action==='undo') {
+        dep.status='upcoming'; dep.note='';
+        promoteNext(arr);
+        type==='dps' ? await saveDps() : await saveLoan();
+        type==='dps' ? renderDps(dpsData) : renderLoan(loanData);
+        showToast(`↩️ ${dep.date} — পূর্বাবস্থায়`);
       }
     });
   });
 }
 
-let toastTimer;
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
-}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.item') && !e.target.closest('.modal')) closeAll();
+});
 
-document.addEventListener('click', closeAll);
 
-// ── Init: listen to Firebase in real-time ──
-setSyncStatus('syncing', 'সংযোগ হচ্ছে...');
+// ── RESET ALL DATA ────────────────────────────────────────────────────────
+window.resetAllData = async function() {
+  if (!confirm('সব ডেটা রিসেট হবে। নিশ্চিত?')) return;
+  setSyncStatus('syncing','রিসেট হচ্ছে...');
+  try {
+    const freshDps = JSON.parse(JSON.stringify(DEFAULT_DPS));
+    promoteNext(freshDps);
+    const freshLoan = JSON.parse(JSON.stringify(DEFAULT_LOAN));
+    await set(dpsRef, freshDps);
+    await set(loanRef, freshLoan);
+    showToast('✅ ডেটা রিসেট সম্পন্ন!');
+  } catch(e) {
+    showToast('❌ রিসেট হয়নি');
+  }
+};
 
-// Check if data exists, if not seed defaults
-get(depositsRef).then(snapshot => {
-  if (!snapshot.exists()) {
-    // First time — seed with defaults
-    const seeded = promoteNext(JSON.parse(JSON.stringify(DEFAULT_DEPOSITS)));
-    set(depositsRef, seeded);
+// ── FIREBASE INIT ─────────────────────────────────────────────────────────
+setSyncStatus('syncing','সংযোগ হচ্ছে...');
+
+// Seed DPS if empty
+get(dpsRef).then(snap => {
+  if (!snap.exists()) {
+    const seeded = JSON.parse(JSON.stringify(DEFAULT_DPS));
+    promoteNext(seeded);
+    set(dpsRef, seeded);
   }
 });
 
-// Real-time listener — fires on ANY device change instantly
-onValue(depositsRef, (snapshot) => {
-  if (snapshot.exists()) {
-    deposits = snapshot.val();
-    setSyncStatus('synced', 'Real-time sync চালু ✓');
-    render(deposits);
+// Seed Loan if empty
+get(loanRef).then(snap => {
+  if (!snap.exists()) {
+    const seeded = JSON.parse(JSON.stringify(DEFAULT_LOAN));
+    set(loanRef, seeded);
   }
-}, (error) => {
-  setSyncStatus('error', 'সংযোগ ত্রুটি!');
-  // Fallback to defaults
-  deposits = JSON.parse(JSON.stringify(DEFAULT_DEPOSITS));
-  promoteNext(deposits);
-  render(deposits);
+});
+
+// Real-time DPS listener
+onValue(dpsRef, snap => {
+  if (snap.exists()) {
+    dpsData = snap.val();
+    setSyncStatus('synced','Real-time sync চালু ✓');
+    renderDps(dpsData);
+  }
+}, () => {
+  dpsData = JSON.parse(JSON.stringify(DEFAULT_DPS));
+  promoteNext(dpsData);
+  renderDps(dpsData);
+  setSyncStatus('error','offline mode');
+});
+
+// Real-time Loan listener
+onValue(loanRef, snap => {
+  if (snap.exists()) {
+    loanData = snap.val();
+    renderLoan(loanData);
+  }
+}, () => {
+  loanData = JSON.parse(JSON.stringify(DEFAULT_LOAN));
+  renderLoan(loanData);
 });
 </script>
 </body>
